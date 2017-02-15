@@ -200,12 +200,14 @@ public class ConvertDisplay {
 				latexOutput = latexOutput.replaceAll("sqrt\\{([^)]*)\\)", "sqrt\\{$1\\}");
 				latexOutput = latexOutput.replace("pi", "\\pi");
 				latexOutput = latexOutput.replace(")", ")}");
+				latexOutput = latexOutput.replace("cbrt","cbrt");
 				latexOutput = latexOutput.replaceAll("\\\\([0-9])", "$1");
 				latexOutput = latexOutput.replaceAll("\\^(-?[0-9]*)","\\^\\{$1\\}");
 				latexOutput = latexOutput.replaceAll("\\{\\}", "");
 				latexOutput = latexOutput.replace("asin", "sin^{-1}");
 				latexOutput = latexOutput.replace("acos", "cos^{-1}");
 				latexOutput = latexOutput.replace("atan", "tan^{-1}");
+				latexOutput = latexOutput.replace("log", "ln");
 				latexOutput = latexOutput.replace("\\\\", "\\");
 				return;
 			}

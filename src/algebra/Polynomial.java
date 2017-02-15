@@ -632,96 +632,163 @@ public class Polynomial extends TreeMap<Integer, Double> {
 
 		return p;
 	}
-
-	public static void main(String[] args) {
-
-		// long start;
-		//
-		// start = System.currentTimeMillis();
-		// Polynomial p = new Polynomial();
-		// Polynomial p = new Polynomial(); System.out.println( "leer: P(x) = "
-		// + p
-		// ); //--- P(x) = 5x^3 + 2x + 7: ------------------------- //
-		// p.put( new Integer("0"), new Double("7") ); //
-		// p.put( new Integer("1"), new Double("2") ); //
-		// p.put( new Integer("3"), new Double("24") );
-		// //--- P(x) = x^2 - 1: ------------------------------- //
-		// p.put( new Integer("0"), new Double("-1") ); //
-		// p.put( new Integer("2"), new Double("1") );
-		// //--- P(x) = x^1023 - 3.5 x^2 + 3x - 1: ------------------
-		// p.put( 2, 3.5 ); p.put( 1, 3. ); p.put( 0, -1. ); p.put( 10023, 1.0
-		// );
-		// //---------------------------------------------------
-		// System.out.println( "P(x) = " + p + ", deg P=" + p.deg() );
-		//
-		// Polynomial q = new Polynomial();
-		// Polynomial q1 = new Polynomial(new ExponentComparator()); //--- Q(x)
-		// = 8x^2 + 3x:
-		// q1.put( new Integer("1"), new Double("3") ); //
-		// q1.put( new Integer("2"), new Double("8") ); //--- Q(x) = x + 1:
-		//
-		// q1.put( new Integer("0"), new Double("1") ); //
-		// q1.put( new Integer("1"), new Double("1") ); //--- Q(x) = - x^523 +
-		// x: ---------------------------------
-		// q1.put( new Integer("523"), new Double("-1") );
-		// q1.put( new Integer("1"), new Double("1"));
-		// //---------------------------------------------------
-		// System.out.println( "Q(x) = " + q + ", deg Q=" + q.deg() );
-		//
-		// Polynomial[] division = p.divide(q1);
-		// String output = "P(x) = (" + division[0] + ") Q(x)";
-		// String remainder = division[1].toString();
-		// if (
-		// remainder != "" ) output += " + " + division[1]; System.out.println(
-		// output );
-		//
-		// System.out.println("P(x) Q(x) = " + p.multiply(q) );
-		//
-		// System.out.println("\nGebraucht fuer TreeMap: " +
-		// (System.currentTimeMillis()-start) + "ms");
-		//
-		// start = System.currentTimeMillis();
-		//
-		// double[] p1 = new double[0]; System.out.println( "leer: P(x) = " +
-		// toString(p1) ); //--- P(x) = 5x^3 + 2x + 7: -------------------------
-		// p.put( new Integer("0"), new Double("7") ); //
-		// p.put( new Integer("1"),
-		// new Double("2") ); //
-		// p.put( new Integer("3"), new Double("24") ); //--- P(x) = x^2 - 1:
-		// ------------------------------- //
-		// p.put( new Integer("0"), new Double("-1") ); //
-		// p.put( new Integer("2"), new Double("1") ); //--- P(x) = x^1023 - 3.5
-		// x^2 + 3x - 1: ------------------
-		// int size = 10024; p1 = new double[size]; p1[size - 1] = 1; p1[2] =
-		// -3.5;
-		// p1[1] = 3; p1[0] = -1;
-		// //---------------------------------------------------
-		// System.out.println( "P(x) = " + toString(p1) + ", deg P=" + deg(p1)
-		// );
-		//
-		// double[] q2; //--- Q(x) = 8x^2 + 3x: -----------------------------
-		// q.put( new Integer("1"), new Double("3") ); //
-		// q.put( new Integer("2"), new Double("8")) ; //--- Q(x) = x + 1:
-		// ---------------------------------
-		// q.put( new Integer("0"), new Double("1") ); //
-		// q.put( new Integer("1"), new Double("1")) ; //--- Q(x) = - 523 x + x:
-		// q2 = new double[524]; q2[523] = -1;
-		// q2[1] = 1; //---------------------------------------------------
-		// System.out.println( "Q(x) = " + toString(q2) + ", deg Q=" + deg(q2)
-		// );
-		//
-		// System.out.println("PQ = " + toString(multiply(p1,q2))); double[][]
-		// division1 = divide(p1,q2); System.out.println("P/Q = " +
-		// toString(division1[0]) + " Rest " + toString(division1[1]));
-		//
-		// System.out.println("\nGebraucht fuer double-Array: " +
-		// (System.currentTimeMillis()-start) + "ms" ); } //
-		String co="",ex="";
-		Polynomial p = new Polynomial();
-		String str="-12x";
-		System.out.println(str);	
-		p = p.givePolynomial(str);
-		System.out.println(p.toString());
-		//System.out.println(p.toString());
+	public boolean isValidQuadratic() {
+		boolean flag=true;
+			if (this.size() != 3 ) {
+				return false;
+			}
+			if (isEmpty()) {
+				return false;
+			}
+			Set<Integer> keys = this.keySet();
+			for (int exponent : keys) {
+				if (exponent < 0 || exponent > 2) {
+					flag = false;
+					break;
+				}
+			}
+		return flag;
 	}
+	public String solveQuadratic() {
+		String output = "";
+		if (isValidQuadratic()) {
+			Expression e = new Expression();
+			double a=0,b=0,c=0,temp=0;
+			String t,d;
+			Set<Integer> keys = this.keySet();
+			for (int exponent : keys) {
+				switch (exponent) {
+				case 0:
+					c= this.get(exponent);
+					break;
+				case 1:
+					b= this.get(exponent);
+					break;
+				case 2:
+					a= this.get(exponent);
+					break;
+				}
+			}
+				if ((b*b-4*a*c) < 0 ) {
+					output="Imaginary!";
+				}
+				else
+				{
+				d = "sqrt(" +b*b + "-4*("+a*c+"))";
+				b=-1.0*b;
+				t = b +"+"+d;
+				t = "(" + t + ")";
+				t=t +"/(2*"+a+")";
+				e.setExpression(t);
+				e.setPrecision(4);
+				output = "x1=" +e.eval();
+				t=b +"-"+d;
+				t = "(" + t + ")";
+				t=t +"/(2*"+a+")";
+				e.setExpression(t);
+				e.setPrecision(4);
+				output = output + " x2=" + e.eval();
+//				e.setExpression("(-("+b+")+sqrt"+b*b+"-("+4*a*c+")))/(2*" +a+")");
+//				System.out.println(e.getExpression());
+//				e.setPrecision(3);
+//				output = "X1=" + e.eval();
+//				e.setExpression("(-("+b+")-sqrt"+b*b+"-("+4*a*c+")))/(2*" +a+")");
+//				output=output+" X2=" + e.eval();
+				}
+			}
+		
+		return output;
+	}
+//	public static void main(String[] args) {
+//
+//		// long start;
+//		//
+//		// start = System.currentTimeMillis();
+//		 Polynomial p = new Polynomial();
+//		// Polynomial p = new Polynomial(); System.out.println( "leer: P(x) = "
+//		// + p
+//		// ); //--- P(x) = 5x^3 + 2x + 7: ------------------------- //
+//		 p.put( new Integer("0"), new Double("7") ); //
+//		 p.put( new Integer("1"), new Double("2") ); //
+//		 p.put( new Integer("2"), new Double("1") );
+//		 System.out.println(p.toString());
+//		// //--- P(x) = x^2 - 1: ------------------------------- //
+//		// p.put( new Integer("0"), new Double("-1") ); //
+//		// p.put( new Integer("2"), new Double("1") );
+//		// //--- P(x) = x^1023 - 3.5 x^2 + 3x - 1: ------------------
+//		// p.put( 2, 3.5 ); p.put( 1, 3. ); p.put( 0, -1. ); p.put( 10023, 1.0
+//		// );
+//		// //---------------------------------------------------
+//		// System.out.println( "P(x) = " + p + ", deg P=" + p.deg() );
+//		//
+//		// Polynomial q = new Polynomial();
+//		// Polynomial q1 = new Polynomial(new ExponentComparator()); //--- Q(x)
+//		// = 8x^2 + 3x:
+//		// q1.put( new Integer("1"), new Double("3") ); //
+//		// q1.put( new Integer("2"), new Double("8") ); //--- Q(x) = x + 1:
+//		//
+//		// q1.put( new Integer("0"), new Double("1") ); //
+//		// q1.put( new Integer("1"), new Double("1") ); //--- Q(x) = - x^523 +
+//		// x: ---------------------------------
+//		// q1.put( new Integer("523"), new Double("-1") );
+//		// q1.put( new Integer("1"), new Double("1"));
+//		// //---------------------------------------------------
+//		// System.out.println( "Q(x) = " + q + ", deg Q=" + q.deg() );
+//		//
+//		// Polynomial[] division = p.divide(q1);
+//		// String output = "P(x) = (" + division[0] + ") Q(x)";
+//		// String remainder = division[1].toString();
+//		// if (
+//		// remainder != "" ) output += " + " + division[1]; System.out.println(
+//		// output );
+//		//
+//		// System.out.println("P(x) Q(x) = " + p.multiply(q) );
+//		//
+//		// System.out.println("\nGebraucht fuer TreeMap: " +
+//		// (System.currentTimeMillis()-start) + "ms");
+//		//
+//		// start = System.currentTimeMillis();
+//		//
+//		// double[] p1 = new double[0]; System.out.println( "leer: P(x) = " +
+//		// toString(p1) ); //--- P(x) = 5x^3 + 2x + 7: -------------------------
+//		// p.put( new Integer("0"), new Double("7") ); //
+//		// p.put( new Integer("1"),
+//		// new Double("2") ); //
+//		// p.put( new Integer("3"), new Double("24") ); //--- P(x) = x^2 - 1:
+//		// ------------------------------- //
+//		// p.put( new Integer("0"), new Double("-1") ); //
+//		// p.put( new Integer("2"), new Double("1") ); //--- P(x) = x^1023 - 3.5
+//		// x^2 + 3x - 1: ------------------
+//		// int size = 10024; p1 = new double[size]; p1[size - 1] = 1; p1[2] =
+//		// -3.5;
+//		// p1[1] = 3; p1[0] = -1;
+//		// //---------------------------------------------------
+//		// System.out.println( "P(x) = " + toString(p1) + ", deg P=" + deg(p1)
+//		// );
+//		//
+//		// double[] q2; //--- Q(x) = 8x^2 + 3x: -----------------------------
+//		// q.put( new Integer("1"), new Double("3") ); //
+//		// q.put( new Integer("2"), new Double("8")) ; //--- Q(x) = x + 1:
+//		// ---------------------------------
+//		// q.put( new Integer("0"), new Double("1") ); //
+//		// q.put( new Integer("1"), new Double("1")) ; //--- Q(x) = - 523 x + x:
+//		// q2 = new double[524]; q2[523] = -1;
+//		// q2[1] = 1; //---------------------------------------------------
+//		// System.out.println( "Q(x) = " + toString(q2) + ", deg Q=" + deg(q2)
+//		// );
+//		//
+//		// System.out.println("PQ = " + toString(multiply(p1,q2))); double[][]
+//		// division1 = divide(p1,q2); System.out.println("P/Q = " +
+//		// toString(division1[0]) + " Rest " + toString(division1[1]));
+//		//
+//		// System.out.println("\nGebraucht fuer double-Array: " +
+//		// (System.currentTimeMillis()-start) + "ms" ); } //
+////		String co="",ex="";
+////		Polynomial p = new Polynomial();
+////		String str="-12x";
+////		System.out.println(str);	
+////		p = p.givePolynomial(str);
+////		System.out.println(p.toString());
+//		//System.out.println(p.toString());
+//	}
 }

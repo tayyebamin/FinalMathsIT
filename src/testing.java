@@ -20,7 +20,7 @@ public class testing {
 		
 //		cD.DisplayMode=Mode.NORMAL;
 //		cD.cDAngleMode=AngleMode.DEGREE;
-//		btn= giveArray("sin 0");
+//		btn= giveArray("(-3+sqrt(9.0-(-32.0)))/(4)");
 //		EVAL("simple");	
 //		btn=giveArray("Ans + 2");
 //		EVAL("extended");
@@ -44,24 +44,30 @@ public class testing {
 //		cD.DisplayMode=Mode.RATIONAL;
 //		btn=giveArray("1 whole 7 bata 9");
 //		RATIONAL();
-//		cD.DisplayMode=Mode.ALGEBRA;
-//		btn = giveArray("2x^-2");
-//		String [] btna={"2","x^","-","2"};
-//		Polynomial p1,p2;
-//		p1 = new Polynomial();
+		cD.DisplayMode=Mode.ALGEBRA;
+		btn = giveArray("2x^2 + 3x -4");
+		String [] btna={"-","3","x^","2" ,"+","1","5","x","-","4"};
+		
+		Polynomial p1;
+		p1 = new Polynomial();
 //		p2 = new Polynomial();
-//		p1=Algebra(btna);
-//		System.out.println(p1.toString());
-		Matrix M = new Matrix(new double[][]{{14,6},{36,17}});
-		System.out.println(M.toString());
-		System.out.println(String.valueOf(M.determinant(M,2)));
-		Matrix Minv = new Matrix(2,2);
-		Minv = M.inverse();
-		System.out.println(Minv.toString());
-		Matrix Minvagain = new Matrix(2,2);
-		Minvagain = Minv.inverse();
-		System.out.println(Minvagain.toString());
-		System.out.println(String.valueOf(Minvagain.determinant(Minvagain,2)));
+		p1=Algebra(btna);
+		if (p1.isValidQuadratic()) { System.out.println(p1.solveQuadratic()); 
+		
+		} else {
+			System.out.println("Invalid Quadratic");
+		}
+		System.out.println(p1.toString());
+//		Matrix M = new Matrix(new double[][]{{14,6},{36,17}});
+//		System.out.println(M.toString());
+//		System.out.println(String.valueOf(M.determinant(M,2)));
+//		Matrix Minv = new Matrix(2,2);
+//		Minv = M.inverse();
+//		System.out.println(Minv.toString());
+//		Matrix Minvagain = new Matrix(2,2);
+//		Minvagain = Minv.inverse();
+//		System.out.println(Minvagain.toString());
+//		System.out.println(String.valueOf(Minvagain.determinant(Minvagain,2)));
 		//double dd = Math.signum(d) * (Math.abs(d) + (m / 60.0) + (s / 3600.0));
 		//System.out.println(String.valueOf(dd));
 		}
