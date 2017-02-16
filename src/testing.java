@@ -20,7 +20,7 @@ public class testing {
 		
 //		cD.DisplayMode=Mode.NORMAL;
 //		cD.cDAngleMode=AngleMode.DEGREE;
-//		btn= giveArray("(-3+sqrt(9.0-(-32.0)))/(4)");
+//		btn= giveArray("cbrt 27 NEXT *  sqrt 16");
 //		EVAL("simple");	
 //		btn=giveArray("Ans + 2");
 //		EVAL("extended");
@@ -44,20 +44,22 @@ public class testing {
 //		cD.DisplayMode=Mode.RATIONAL;
 //		btn=giveArray("1 whole 7 bata 9");
 //		RATIONAL();
-		cD.DisplayMode=Mode.ALGEBRA;
-		btn = giveArray("2x^2 + 3x -4");
-		String [] btna={"-","3","x^","2" ,"+","1","5","x","-","4"};
-		
+//		cD.DisplayMode=Mode.ALGEBRA;
+//		btn = giveArray("2x^2 + 3x -4");
+//		//String [] btna={"-","3","x^","2" ,"+","1","5","x","-","4"};
+		String [] btna={"-","3","x^","3" ,"-","3","x^","2","+","5","0","0"};
 		Polynomial p1;
 		p1 = new Polynomial();
-//		p2 = new Polynomial();
 		p1=Algebra(btna);
-		if (p1.isValidQuadratic()) { System.out.println(p1.solveQuadratic()); 
-		
-		} else {
-			System.out.println("Invalid Quadratic");
-		}
-		System.out.println(p1.toString());
+		System.out.println(p1.evaluate(5.0).toPlainString());
+////		p2 = new Polynomial();
+//		p1=Algebra(btna);
+//		if (p1.isValidQuadratic()) { System.out.println(p1.solveQuadratic()); 
+//		
+//		} else {
+//			System.out.println("Invalid Quadratic");
+//		}
+//		System.out.println(p1.toString());
 //		Matrix M = new Matrix(new double[][]{{14,6},{36,17}});
 //		System.out.println(M.toString());
 //		System.out.println(String.valueOf(M.determinant(M,2)));

@@ -508,9 +508,8 @@ public class Polynomial extends TreeMap<Integer, Double> {
 		String strExp;
 		strExp = this.toString();
 		strExp = strExp.replaceAll(" ", "*");
-		strExp = strExp.replaceAll("x", String.valueOf(value));
+		strExp = strExp.replaceAll("x", "*" + String.valueOf(value));
 		E.setExpression(strExp);
-		System.out.println(strExp);
 		bd_value = E.eval();
 		return bd_value;
 	}
@@ -634,9 +633,7 @@ public class Polynomial extends TreeMap<Integer, Double> {
 	}
 	public boolean isValidQuadratic() {
 		boolean flag=true;
-			if (this.size() != 3 ) {
-				return false;
-			}
+			
 			if (isEmpty()) {
 				return false;
 			}

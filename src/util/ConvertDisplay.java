@@ -200,7 +200,7 @@ public class ConvertDisplay {
 				latexOutput = latexOutput.replaceAll("sqrt\\{([^)]*)\\)", "sqrt\\{$1\\}");
 				latexOutput = latexOutput.replace("pi", "\\pi");
 				latexOutput = latexOutput.replace(")", ")}");
-				latexOutput = latexOutput.replace("cbrt","cbrt");
+				latexOutput = latexOutput.replace("cbrt","\\sqrt[3]");
 				latexOutput = latexOutput.replaceAll("\\\\([0-9])", "$1");
 				latexOutput = latexOutput.replaceAll("\\^(-?[0-9]*)","\\^\\{$1\\}");
 				latexOutput = latexOutput.replaceAll("\\{\\}", "");
