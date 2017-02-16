@@ -347,6 +347,7 @@ public class RationalNum {
 		P = p.abs();
 		Q= q;
 		WN = wn.abs();
+		//WHOLE NUMBER
 		if (mode == SimplificationMode.WHOLENUMBER) {
 			if (Q.intValue() < P.intValue()) {
 				WN = P.divide(Q).abs();
@@ -365,12 +366,14 @@ public class RationalNum {
 			}
 			
 		}
+		//RATIONAL
 		if (mode == SimplificationMode.RATIONAL) {
 			if (wn.intValue() != 0) {
 				p=q.multiply(wn).abs().add(p.abs());
 			}
 			return;
 		}
+		//SIMPLIFY
 		if (mode == SimplificationMode.SIMPLIFY) {
 			value = p.divide(q).doubleValue();
 		}
