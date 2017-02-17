@@ -283,8 +283,9 @@ public class ConvertDisplay {
 		for (i = 0; i < Buttons.length; i++) {
 			charRun(Buttons[i].trim());
 		}
+		giveLatex();
 		if (evaluateInput.contains("Ans")){
-		evaluateInput = evaluateInput.replace("Ans",this.Ans.toString());
+		evaluateInput = evaluateInput.replace("Ans",this.Ans.toPlainString());
 		}
 		evaluateInput = evaluateInput.replace(" ", "");
 		E.setExpression(evaluateInput);

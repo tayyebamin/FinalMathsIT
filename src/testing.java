@@ -18,12 +18,12 @@ public class testing {
 		//P=cD.giveAlgebra(btn);
 		//System.out.println(P.toString());
 		
-//		cD.DisplayMode=Mode.NORMAL;
-//		cD.cDAngleMode=AngleMode.DEGREE;
-//		btn= giveArray("cbrt 27 NEXT *  sqrt 16");
-//		EVAL("simple");	
-//		btn=giveArray("Ans + 2");
-//		EVAL("extended");
+		cD.DisplayMode=Mode.NORMAL;
+		cD.cDAngleMode=AngleMode.DEGREE;
+		btn= giveArray("cbrt 27 NEXT *  sqrt 16");
+		EVAL("simple");	
+		btn=giveArray("Ans + 2");
+		EVAL("extended");
 //		btn=giveArray("FAC "
 //				+ "8 NEXT + 3");
 //		EVAL("simple");
@@ -133,6 +133,7 @@ public class testing {
 		System.out.println("Angle Mode CD: " + cD.cDAngleMode );
 		System.out.println("Expression angle mode: " + E.EAngleMode);
 		System.out.println("Expression: " + E.toString());
+		System.out.println("Latex output: " + cD.latexOutput);
 		cD.giveLatex();
 		System.out.println("Latex output: " + cD.latexOutput);
 		try {
