@@ -678,13 +678,13 @@ public class Polynomial extends TreeMap<Integer, Double> {
 				t=t +"/(2*"+a+")";
 				e.setExpression(t);
 				e.setPrecision(4);
-				output = "x1=" +e.eval();
+				output = "x_1=\\:" +e.eval();
 				t=b +"-"+d;
 				t = "(" + t + ")";
 				t=t +"/(2*"+a+")";
 				e.setExpression(t);
 				e.setPrecision(4);
-				output = output + " x2=" + e.eval();
+				output = output + "\\:\\:x_2=\\:" + e.eval();
 //				e.setExpression("(-("+b+")+sqrt"+b*b+"-("+4*a*c+")))/(2*" +a+")");
 //				System.out.println(e.getExpression());
 //				e.setPrecision(3);

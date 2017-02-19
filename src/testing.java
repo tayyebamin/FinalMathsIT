@@ -18,12 +18,14 @@ public class testing {
 		//P=cD.giveAlgebra(btn);
 		//System.out.println(P.toString());
 		
-		cD.DisplayMode=Mode.NORMAL;
-		cD.cDAngleMode=AngleMode.DEGREE;
-		btn= giveArray("cbrt 27 NEXT *  sqrt 16");
-		EVAL("simple");	
-		btn=giveArray("Ans + 2");
-		EVAL("extended");
+//		cD.DisplayMode=Mode.NORMAL;
+//		cD.cDAngleMode=AngleMode.DEGREE;
+//		btn= giveArray("log 2");
+//		String [] btn1 = {"log10", "2"};
+//		//btn=btn1;
+//		EVAL("simple");	
+//		btn=giveArray("Ans + 2");
+		//EVAL("extended");
 //		btn=giveArray("FAC "
 //				+ "8 NEXT + 3");
 //		EVAL("simple");
@@ -41,17 +43,36 @@ public class testing {
 //		cD.cDAngleMode=AngleMode.RADIAN;
 //		btn=giveArray("2+1/2");
 //		//EVAL("extended");
-//		cD.DisplayMode=Mode.RATIONAL;
-//		btn=giveArray("1 whole 7 bata 9");
-//		RATIONAL();
+		RationalNum r1;
+		cD.DisplayMode=Mode.RATIONAL;
+		String[] btn1 = {"2","bata","3"};
+		r1=cD.giveRational(btn1);
+		System.out.println(r1.toString());
+		RationalNum r2;
+		String[] btn2 = {"3","bata","7"};
+		r2=cD.giveRational(btn2);
+		System.out.println(r2.toString());
+		System.out.println (r2.Compare(r1));
+		double f1=5.6;
+		double f2 = 3.2;
+		f1=f1%f2;
+		System.out.println(String.valueOf(f1));
+		//btn=giveArray("1 whole 7 bata 9");
+		//RATIONAL();
 //		cD.DisplayMode=Mode.ALGEBRA;
 //		btn = giveArray("2x^2 + 3x -4");
 //		//String [] btna={"-","3","x^","2" ,"+","1","5","x","-","4"};
-		String [] btna={"-","3","x^","3" ,"-","3","x^","2","+","5","0","0"};
-		Polynomial p1;
-		p1 = new Polynomial();
-		p1=Algebra(btna);
-		System.out.println(p1.evaluate(5.0).toPlainString());
+//		String [] btna={"-","3","x^","-","2" ,"-","3","x","+","5","0"};
+//		Polynomial p1, p2;
+//		p1 = new Polynomial();
+//		p1=Algebra(btna);
+//		System.out.println(p1.toString());
+//	
+//		String [] btna1={"1","x^","2" };
+//		p2 = new Polynomial();
+//		p2 = Algebra(btna1);
+//		System.out.println(p2.toString());
+//		System.out.println(p1.multiply(p2).toString());
 ////		p2 = new Polynomial();
 //		p1=Algebra(btna);
 //		if (p1.isValidQuadratic()) { System.out.println(p1.solveQuadratic()); 
@@ -185,7 +206,7 @@ public class testing {
 		try {
 			P = cD.giveAlgebra(btn1);
 			//R.SimplificationMode=R.SimplificationMode.RATIONAL;
-			System.out.println("Algebra [Algebra]: " + P.toString());
+			//System.out.println("Algebra [Algebra]: " + P.toString());
 //			R.SimplificationMode=R.SimplificationMode.WHOLENUMBER;
 //			System.out.println("Rational [Whole]: " + R.toString());
 //			R.SimplificationMode=R.SimplificationMode.SIMPLIFY;
@@ -200,7 +221,7 @@ public class testing {
 		}
 		return P;
 	}
-	}
+}
 
 
 

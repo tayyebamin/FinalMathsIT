@@ -418,6 +418,36 @@ public class RationalNum {
 		r.q=BigInteger.valueOf(Long.parseLong(den));
 		return r;
 	}
+	public int Compare(RationalNum r2) {
+		int res=0;
+		double d1,d2;
+		RationalNum r1 = new RationalNum();
+		r1=this;
+		if (r1.p.equals(ZERO) || r1.q.equals(ZERO)) {
+			r1.p = BigInteger.ZERO;
+			r1.q = BigInteger.ONE;
+		} else {
+			BigInteger[] cancelled = cancel(r1.p, r1.q);
+			r1.p = cancelled[0];
+			r1.q = cancelled[1];
+		}
+		if (r2.p.equals(ZERO) || r2.q.equals(ZERO)) {
+			r2.p = BigInteger.ZERO;
+			r2.q = BigInteger.ONE;
+		} else {
+			BigInteger[] cancelled = cancel(r2.p, r2.q);
+			r2.p = cancelled[0];
+			r2.q = cancelled[1];
+		}
+		
+		d1=r1.p.doubleValue()/r1.q.doubleValue();
+		d2= r2.p.doubleValue()/r2.q.doubleValue();
+		res=-1;
+		if (d1==d2) {res=0;}
+		if(d1 > d2) { res=1;}
+		
+		return res;
+	}
 
 	/** For test purposes... */
 

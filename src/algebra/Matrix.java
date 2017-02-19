@@ -27,6 +27,9 @@
  * If you do not wish to do so, delete this exception statement from your version.
  */
 package algebra;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import numbers.Numbers;
@@ -1331,8 +1334,10 @@ public class Matrix {
                            res += Math.pow(-1.0, 1.0+j1+1.0) * A[0][j1] * determinant(m, N-1);
            }
        }
-       res = Math.round(res*10000000)/10000000;
+       BigDecimal bd = new BigDecimal(res).setScale(4, RoundingMode.HALF_DOWN);
+       res = bd.doubleValue();
        return res;
+       
        
    }
    public Matrix invert() 
@@ -1462,70 +1467,78 @@ public class Matrix {
    }
    /** For test purposes...*/
   
-   public static void main(String[] args) {
-	   Matrix B = new Matrix(new double[][] {
-		   {1,3,4},
-		   {2,3,3},
-		   {2,5,2}
-	   });
-         Matrix A = new Matrix(new double[][] {
-//         1  2  3  4  5  6  7  8  9 10 11 12  13 14 15 16 17 18 19
-//         { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
-//         { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
-//         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0} 
-         { 1, -2},
-         { 3, 4}
-      });
-//      Matrix T = A.getEigenvectors();
-//      Matrix T1 = new Matrix(A.getDominantEigenvector());
-//         Matrix D = new Matrix(0,0);
-//         D=B.invert();
+//   public static void main(String[] args) {
+//	   Matrix B = new Matrix(new double[][] {
+//		   {1,3,4},
+//		   {2,3,3},
+//		   {2,5,2}
+//	   });
+//         Matrix A = new Matrix(new double[][] {
+////         1  2  3  4  5  6  7  8  9 10 11 12  13 14 15 16 17 18 19
+////         { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
+////         { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+////         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
+////         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+////         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+////         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0} 
+//         { 1, -2},
+//         { 3.8, 1}
+//      });
+//         Matrix I = new Matrix(0,0);
+////      Matrix T = A.getEigenvectors();
+////      Matrix T1 = new Matrix(A.getDominantEigenvector());
+////         Matrix D = new Matrix(0,0);
+////         D=B.invert();
+////         System.out.println(B.toString());
+////         System.out.println(D.times(B).toString());
+////         System.out.println(B.invert().toString());
+////      System.out.println(B.toString());
+////      System.out.println(String.valueOf(B.determinant(B.matrix, B.rows)));
+////      System.out.println(B.inverse().toString());
+////      System.out.println(B.times(B.inverse()).toString());
+////     // Matrix T2 = A.Multiply(B);
+////      System.out.println(T.toString());
+////      Matrix eigenvalues = new Matrix(new double[][] {A.getRealEigenvalues(), A.getImagEigenvalues()});
+////      System.out.println(eigenvalues);
+////      System.out.println("Dominant eigenvalue: " + A.getDominantEigenvalue());
+////      javax.swing.JOptionPane.showMessageDialog(null, "<html>" + T.toHTML("right"));
+////      T = new Matrix(A.getDominantEigenvector()).transpose();
+////      javax.swing.JOptionPane.showMessageDialog(null, "<html>" + T.toHTML("right"));
 //         System.out.println(B.toString());
-//         System.out.println(D.times(B).toString());
-//         System.out.println(B.invert().toString());
-//      System.out.println(B.toString());
-//      System.out.println(String.valueOf(B.determinant(B.matrix, B.rows)));
-//      System.out.println(B.inverse().toString());
-//      System.out.println(B.times(B.inverse()).toString());
-//     // Matrix T2 = A.Multiply(B);
-//      System.out.println(T.toString());
-//      Matrix eigenvalues = new Matrix(new double[][] {A.getRealEigenvalues(), A.getImagEigenvalues()});
-//      System.out.println(eigenvalues);
-//      System.out.println("Dominant eigenvalue: " + A.getDominantEigenvalue());
-//      javax.swing.JOptionPane.showMessageDialog(null, "<html>" + T.toHTML("right"));
-//      T = new Matrix(A.getDominantEigenvector()).transpose();
-//      javax.swing.JOptionPane.showMessageDialog(null, "<html>" + T.toHTML("right"));
-         String str;
-         str = B.giveString();
-         String[] rows = str.split(";");
-         System.out.println(B.toString());
-         System.out.println("Rank: " + B.rank());
-         Matrix Q = new Matrix(0,0);
-         Matrix R = new Matrix(0,0);
-         Q=B.decomposeQR()[0];
-         R=B.decomposeQR()[1];
-         System.out.println("QR Dec. Q\n" + Q.toString());
-         System.out.println("QR Dec. R\n" + R.toString());
-         System.out.println("\n\n");
-         System.out.println("QR\n"+Q.Multiply(R).toString());
-         System.out.println("Adj: \n" + B.adjugate().toString());
-         //System.out.println(B.toString());
-   }
+//         System.out.println(B.determinant(B, 3));
+//         I=B.invert();
+//         System.out.println(I.toString());
+//         B=I.invert();
+//         System.out.println(B.toString());
+//         System.out.println(B.determinant(B, 3));
+////         String str;
+////         str = B.giveString();
+////         String[] rows = str.split(";");
+////         System.out.println(B.toString());
+////         System.out.println("Rank: " + B.rank());
+////         Matrix Q = new Matrix(0,0);
+////         Matrix R = new Matrix(0,0);
+////         Q=B.decomposeQR()[0];
+////         R=B.decomposeQR()[1];
+////         System.out.println("QR Dec. Q\n" + Q.toString());
+////         System.out.println("QR Dec. R\n" + R.toString());
+////         System.out.println("\n\n");
+////         System.out.println("QR\n"+Q.Multiply(R).toString());
+////         System.out.println("Adj: \n" + B.adjugate().toString());
+//         //System.out.println(B.toString());
+//   }
    
 }

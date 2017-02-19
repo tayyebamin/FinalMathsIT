@@ -192,7 +192,7 @@ public class ConvertDisplay {
 			if (DisplayMode == Mode.NORMAL) {
 				latexOutput = evaluateInput;
 				latexOutput = latexOutput.replaceAll("FAC\\(([0-9]*)\\)", "$1!");
-				latexOutput = latexOutput.replace("\\", "\\div");
+				latexOutput = latexOutput.replace("/", "\\div");
 				latexOutput = latexOutput.replace("*", "\\times");
 				latexOutput = latexOutput.replaceAll("(times)([\\w])", "$1\\\\$2");
 				latexOutput = latexOutput.replace("sqrt(", "\\sqrt{");
@@ -208,6 +208,7 @@ public class ConvertDisplay {
 				latexOutput = latexOutput.replace("acos", "cos^{-1}");
 				latexOutput = latexOutput.replace("atan", "tan^{-1}");
 				latexOutput = latexOutput.replace("log", "ln");
+				latexOutput = latexOutput.replace("ln10", "log");
 				latexOutput = latexOutput.replace("\\\\", "\\");
 				return;
 			}
@@ -283,12 +284,15 @@ public class ConvertDisplay {
 		for (i = 0; i < Buttons.length; i++) {
 			charRun(Buttons[i].trim());
 		}
+	
 		giveLatex();
 		if (evaluateInput.contains("Ans")){
+			screenInput=evaluateInput;
 		evaluateInput = evaluateInput.replace("Ans",this.Ans.toPlainString());
 		}
 		evaluateInput = evaluateInput.replace(" ", "");
 		E.setExpression(evaluateInput);
+		evaluateInput = screenInput;
 		return E;
 	}
 
