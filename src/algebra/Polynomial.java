@@ -343,11 +343,11 @@ public class Polynomial extends TreeMap<Integer, Double> {
 		 * (Integer) e.nextElement(); k = e.next(); if ( Math.abs(r.get(k)) <
 		 * ACCURACY ) r.remove(k); }
 		 */
-		Set<Integer> keys = r.keySet();
-		for (Integer e : keys) {
-			if (Math.abs(r.get(e)) < ACCURACY)
-				r.remove(e);
-		}
+//		Set<Integer> keys = r.keySet();
+//		for (Integer e : keys) {
+//			if (Math.abs(r.get(e)) < ACCURACY)
+//				r.remove(e);
+//		}
 		return r;
 	}
 

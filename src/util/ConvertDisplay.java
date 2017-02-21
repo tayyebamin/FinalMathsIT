@@ -317,6 +317,7 @@ public class ConvertDisplay {
 					TermFoundFlag = true;
 					output = output+csign+c+x+expsign+exp;
 					exponent = Integer.parseInt(expsign+exp);
+					
 					coefficient = Double.parseDouble(csign + c);
 					P.put(exponent, coefficient);
 					csign=ch;
@@ -340,11 +341,13 @@ public class ConvertDisplay {
 			{
 				if (ch == "x^" || ch == "x")
 				{
+					if (c == "") { c = "1";}
 					if (ch == "x")
 					{
 						expFlag=true;
 						x="x";
 						exp="1";
+						
 					}
 					else
 					{
