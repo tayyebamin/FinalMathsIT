@@ -149,9 +149,15 @@ public class ConvertDisplay {
 			} else {
 				if (s.equals("NEXT")) {
 					stack.pop();
-					if (screenInput.charAt(CursorPos-1) == ')') {
+					if (CursorPos < screenInput.length()-1 ){
+					if (screenInput.charAt(CursorPos) == ')' && screenInput.charAt(CursorPos+1) == ')') {
 						CursorPos++;
-					} else {
+					}
+					else {
+						CursorPos = screenInput.length();
+					}
+					}
+					else{
 						CursorPos = screenInput.length();
 					}
 				} else {
