@@ -16,7 +16,7 @@ import numbers.*;
 //This class will use to convert an expression into Latex display format.
 public class ConvertDisplay {
 	public String screenInput = "", evaluateInput = "", latexOutput;
-	static int CursorPos = 0, backCur = 0;
+	public int CursorPos = 0, backCur = 0;
 	static boolean Adjusted = false, bracketFun = false, endBracket = true, powerFlag = false;
 	static Expression E = new Expression();
 	static String errorMsg = null;
@@ -197,7 +197,7 @@ public class ConvertDisplay {
 		if (evaluateInput.length() > 0) {
 			if (DisplayMode == Mode.NORMAL) {
 				latexOutput = evaluateInput;
-				latexOutput = latexOutput.replaceAll("FAC\\(([0-9]*)\\)", "$1!");
+				latexOutput = latexOutput.replaceAll("FAC\\(([0-9]*)(\\\\Box)?\\)", "$1!$2");
 				latexOutput = latexOutput.replace("/", "\\div");
 				latexOutput = latexOutput.replace("*", "\\times");
 				latexOutput = latexOutput.replaceAll("(times)([\\w])", "$1\\\\$2");
@@ -291,14 +291,23 @@ public class ConvertDisplay {
 			charRun(Buttons[i].trim());
 		}
 	
-		giveLatex();
 		if (evaluateInput.contains("Ans")){
 			screenInput=evaluateInput;
-		evaluateInput = evaluateInput.replace("Ans",this.Ans.toPlainString());
+			evaluateInput = evaluateInput.replace("Ans",this.Ans.toPlainString());
+			CursorPos = evaluateInput.length();
 		}
 		evaluateInput = evaluateInput.replace(" ", "");
 		E.setExpression(evaluateInput);
-		evaluateInput = screenInput;
+		if (evaluateInput.length() > CursorPos) {
+			evaluateInput = evaluateInput.substring(0, CursorPos) + "\\Box" + evaluateInput.substring(CursorPos);
+					
+		}
+		else
+		{
+			evaluateInput = evaluateInput+"\\Box";
+					
+		}
+		giveLatex();
 		return E;
 	}
 

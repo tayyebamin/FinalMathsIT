@@ -1,4 +1,5 @@
 import java.io.LineNumberInputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import algebra.*;
@@ -18,12 +19,50 @@ public class testing {
 		//P=cD.giveAlgebra(btn);
 		//System.out.println(P.toString());
 		
-//		cD.DisplayMode=Mode.NORMAL;
-//		cD.cDAngleMode=AngleMode.DEGREE;
-//		btn= giveArray("log 2");
+		cD.DisplayMode=Mode.NORMAL;
+		
+		cD.cDAngleMode=AngleMode.DEGREE;
+		//String[] btn1 = {"sin","cos","tan","4","5","NEXT","NEXT","NEXT","+","1"};
+		//String[] btn1 = {"sin","FAC","4","NEXT","+","1","*","FAC","3"};
+		//String[] btn1 = {"log","4","NEXT","+","9"};
+		String[] btn1 = {"FAC","3","NEXT","+","FAC","2"};
+		String[] btn2 = {"Ans"};
+		E=cD.giveExpression(btn1);
+		E.EAngleMode = cD.cDAngleMode;
+		try {
+			cD.Ans = E.eval();
+			System.out.println("Answer = " +cD.Ans.toPlainString());
+			 
+		} catch (Exception e) {
+			System.out.println("Error");
+		}
+		System.out.println("Cur Pos" + cD.CursorPos + " at " + cD.evaluateInput.charAt(cD.CursorPos));
+		System.out.println("Angle Mode CD: " + cD.cDAngleMode );
+		System.out.println("Expression angle mode: " + E.EAngleMode);
+		System.out.println("Expression: " + E.toString());
+		System.out.println("Latex output: " + cD.latexOutput);
+		cD.giveLatex();
+		System.out.println("Latex output: " + cD.latexOutput);
+		
+		E=cD.giveExpression(btn2);
+		E.EAngleMode = cD.cDAngleMode;
+		try {
+			cD.Ans = E.eval();
+			System.out.println(cD.Ans.toPlainString());
+		} catch (Exception e) {
+			System.out.println("Error");
+		}
+		System.out.println("Cur Pos" + cD.CursorPos + " at " + cD.evaluateInput.charAt(cD.CursorPos));
+		System.out.println("Angle Mode CD: " + cD.cDAngleMode );
+		System.out.println("Expression angle mode: " + E.EAngleMode);
+		System.out.println("Expression: " + E.toString());
+		System.out.println("Latex output: " + cD.latexOutput);
+		cD.giveLatex();
+		System.out.println("Latex output: " + cD.latexOutput);
+		//btn= giveArray("sin cos 45 NEXT + 12");
 //		String [] btn1 = {"log10", "2"};
 //		//btn=btn1;
-//		EVAL("simple");	
+		//EVAL("simple");	
 //		btn=giveArray("Ans + 2");
 		//EVAL("extended");
 //		btn=giveArray("FAC "
@@ -43,20 +82,24 @@ public class testing {
 //		cD.cDAngleMode=AngleMode.RADIAN;
 //		btn=giveArray("2+1/2");
 //		//EVAL("extended");
-		RationalNum r1;
-		cD.DisplayMode=Mode.RATIONAL;
-		String[] btn1 = {"2","bata","3"};
-		r1=cD.giveRational(btn1);
-		System.out.println(r1.toString());
-		RationalNum r2;
-		String[] btn2 = {"3","bata","7"};
-		r2=cD.giveRational(btn2);
-		System.out.println(r2.toString());
-		System.out.println (r2.Compare(r1));
-		double f1=5.6;
-		double f2 = 3.2;
-		f1=f1%f2;
-		System.out.println(String.valueOf(f1));
+		
+		
+		
+//		RationalNum r1;
+//		cD.DisplayMode=Mode.RATIONAL;
+//		String[] btn1 = {"2","whole","1","bata","3"};
+//		r1=cD.giveRational(btn1);
+//		System.out.println(r1.toString());
+//		RationalNum r2;
+//		String[] btn2 = {"3","bata","7"};
+//		r2=cD.giveRational(btn2);
+//		System.out.println(r2.toString());
+//		System.out.println (r2.Compare(r1));
+		
+		
+		
+		
+		
 		//btn=giveArray("1 whole 7 bata 9");
 		//RATIONAL();
 //		cD.DisplayMode=Mode.ALGEBRA;
