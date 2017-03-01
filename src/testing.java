@@ -25,40 +25,40 @@ public class testing {
 		//String[] btn1 = {"sin","cos","tan","4","5","NEXT","NEXT","NEXT","+","1"};
 		//String[] btn1 = {"sin","FAC","4","NEXT","+","1","*","FAC","3"};
 		//String[] btn1 = {"log","4","NEXT","+","9"};
-		String[] btn1 = {"FAC","3","NEXT","+","FAC","2"};
-		String[] btn2 = {"Ans"};
-		E=cD.giveExpression(btn1);
-		E.EAngleMode = cD.cDAngleMode;
-		try {
-			cD.Ans = E.eval();
-			System.out.println("Answer = " +cD.Ans.toPlainString());
-			 
-		} catch (Exception e) {
-			System.out.println("Error");
-		}
-		System.out.println("Cur Pos" + cD.CursorPos + " at " + cD.evaluateInput.charAt(cD.CursorPos));
-		System.out.println("Angle Mode CD: " + cD.cDAngleMode );
-		System.out.println("Expression angle mode: " + E.EAngleMode);
-		System.out.println("Expression: " + E.toString());
-		System.out.println("Latex output: " + cD.latexOutput);
-		cD.giveLatex();
-		System.out.println("Latex output: " + cD.latexOutput);
-		
-		E=cD.giveExpression(btn2);
-		E.EAngleMode = cD.cDAngleMode;
-		try {
-			cD.Ans = E.eval();
-			System.out.println(cD.Ans.toPlainString());
-		} catch (Exception e) {
-			System.out.println("Error");
-		}
-		System.out.println("Cur Pos" + cD.CursorPos + " at " + cD.evaluateInput.charAt(cD.CursorPos));
-		System.out.println("Angle Mode CD: " + cD.cDAngleMode );
-		System.out.println("Expression angle mode: " + E.EAngleMode);
-		System.out.println("Expression: " + E.toString());
-		System.out.println("Latex output: " + cD.latexOutput);
-		cD.giveLatex();
-		System.out.println("Latex output: " + cD.latexOutput);
+//		String[] btn1 = {"sqrt","1","-","sin","pi","NEXT","^","2"};
+//		String[] btn2 = {"Ans"};
+//		E=cD.giveExpression(btn1);
+//		E.EAngleMode = cD.cDAngleMode;
+//		try {
+//			cD.Ans = E.eval();
+//			System.out.println("Answer = " +cD.Ans.toPlainString());
+//			 
+//		} catch (Exception e) {
+//			System.out.println("Error");
+//		}
+//		System.out.println("Cur Pos" + cD.CursorPos + " at " + cD.evaluateInput.charAt(cD.CursorPos));
+//		System.out.println("Angle Mode CD: " + cD.cDAngleMode );
+//		System.out.println("Expression angle mode: " + E.EAngleMode);
+//		System.out.println("Expression: " + E.toString());
+//		System.out.println("Latex output: " + cD.latexOutput);
+//		cD.giveLatex();
+//		System.out.println("Latex output: " + cD.latexOutput);
+//		
+//		E=cD.giveExpression(btn2);
+//		E.EAngleMode = cD.cDAngleMode;
+//		try {
+//			cD.Ans = E.eval();
+//			System.out.println(cD.Ans.toPlainString());
+//		} catch (Exception e) {
+//			System.out.println("Error");
+//		}
+//		System.out.println("Cur Pos" + cD.CursorPos + " at " + cD.evaluateInput.charAt(cD.CursorPos));
+//		System.out.println("Angle Mode CD: " + cD.cDAngleMode );
+//		System.out.println("Expression angle mode: " + E.EAngleMode);
+//		System.out.println("Expression: " + E.toString());
+//		System.out.println("Latex output: " + cD.latexOutput);
+//		cD.giveLatex();
+//		System.out.println("Latex output: " + cD.latexOutput);
 		//btn= giveArray("sin cos 45 NEXT + 12");
 //		String [] btn1 = {"log10", "2"};
 //		//btn=btn1;
@@ -105,12 +105,13 @@ public class testing {
 //		cD.DisplayMode=Mode.ALGEBRA;
 //		btn = giveArray("2x^2 + 3x -4");
 //		//String [] btna={"-","3","x^","2" ,"+","1","5","x","-","4"};
-//		String [] btna={"-","3","x^","-","2" ,"-","3","x","+","5","0"};
-//		Polynomial p1, p2;
-//		p1 = new Polynomial();
-//		p1=Algebra(btna);
-//		System.out.println(p1.toString());
-//	
+		String [] btna={"x^","2" ,"+","x","+","5","0"};
+		Polynomial p1, p2;
+		p1 = new Polynomial();
+		p1=Algebra(btna);
+		System.out.println(p1.toString());
+		System.out.println(p1.evaluate(3.0));
+	
 //		String [] btna1={"1","x^","2" };
 //		p2 = new Polynomial();
 //		p2 = Algebra(btna1);

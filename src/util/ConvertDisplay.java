@@ -201,9 +201,9 @@ public class ConvertDisplay {
 				latexOutput = latexOutput.replace("/", "\\div");
 				latexOutput = latexOutput.replace("*", "\\times");
 				latexOutput = latexOutput.replaceAll("(times)([\\w])", "$1\\\\$2");
-				latexOutput = latexOutput.replace("sqrt(", "\\sqrt{");
+				latexOutput = latexOutput.replaceAll("sqrt\\((.*)\\)", "\\\\sqrt{$1}");
 				latexOutput = latexOutput.replace("(", "{(");
-				latexOutput = latexOutput.replaceAll("sqrt\\{([^)]*)\\)", "sqrt\\{$1\\}");
+				//latexOutput = latexOutput.replaceAll("sqrt\\{([^)]*)\\)", "sqrt\\{$1\\}");
 				latexOutput = latexOutput.replace("pi", "\\pi");
 				latexOutput = latexOutput.replace(")", ")}");
 				latexOutput = latexOutput.replace("cbrt","\\sqrt[3]");
@@ -307,7 +307,7 @@ public class ConvertDisplay {
 			evaluateInput = evaluateInput+"\\Box";
 					
 		}
-		giveLatex();
+		//giveLatex();
 		return E;
 	}
 

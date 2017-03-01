@@ -509,6 +509,8 @@ public class Polynomial extends TreeMap<Integer, Double> {
 		strExp = this.toString();
 		strExp = strExp.replaceAll(" ", "*");
 		strExp = strExp.replaceAll("x", "*" + String.valueOf(value));
+		strExp = strExp.replaceAll("^\\*", "1\\*");
+		strExp = strExp.replaceAll("([+,-])\\*", "$11\\*");
 		E.setExpression(strExp);
 		bd_value = E.eval();
 		return bd_value;
