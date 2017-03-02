@@ -12,7 +12,6 @@ import algebra.Matrix;
 import algebra.Polynomial;
 import numbers.*;
 
-
 //This class will use to convert an expression into Latex display format.
 public class ConvertDisplay {
 	public String screenInput = "", evaluateInput = "", latexOutput;
@@ -23,13 +22,14 @@ public class ConvertDisplay {
 	static String Algebraout;
 	static String Coefficient = "", Power = "";
 	Stack<String> stack = new Stack<String>();
-	public int Mrows=0, Mcols = 0;
-	boolean FractionFound,TrignoFunction=false;
+	public int Mrows = 0, Mcols = 0;
+	int FacStart = 0;
+	boolean FractionFound, TrignoFunction = false;
 	Polynomial P;
 	Matrix M;
 	public BigDecimal Ans;
-	
-	
+
+	public String[] Btns;
 	public AngleMode cDAngleMode;
 
 	public Matrix getM() {
@@ -112,11 +112,9 @@ public class ConvertDisplay {
 	private String insertString(String Main, String Rem, int CurPos) {
 		String Output;
 		if (Main.length() > 0) {
-		Output = Main.substring(0, CurPos) + Rem + Main.substring(CurPos, Main.length());
-		}
-		else
-		{
-			Output=Rem;
+			Output = Main.substring(0, CurPos) + Rem + Main.substring(CurPos, Main.length());
+		} else {
+			Output = Rem;
 		}
 		return Output;
 
@@ -125,7 +123,7 @@ public class ConvertDisplay {
 	private void charRun(String s) {
 		Character ch;
 		int Len = s.length();
-		
+
 		if (FractionFound) {
 			FractionFound = false;
 			R = new RationalNum(p, Long.valueOf(s));
@@ -149,24 +147,34 @@ public class ConvertDisplay {
 			} else {
 				if (s.equals("NEXT")) {
 					stack.pop();
-					if (CursorPos < screenInput.length()-1 ){
-					if (screenInput.charAt(CursorPos) == ')' && screenInput.charAt(CursorPos+1) == ')') {
-						CursorPos++;
-					}
-					else {
-						CursorPos = screenInput.length();
-					}
-					}
-					else{
+					if (CursorPos < screenInput.length() - 1) {
+						if (screenInput.charAt(CursorPos) == ')' && screenInput.charAt(CursorPos + 1) == ')') {
+							CursorPos++;
+						} else {
+							CursorPos = screenInput.length();
+						}
+					} else {
 						CursorPos = screenInput.length();
 					}
 				} else {
-					if (s.equals("e") || s.equals("pi")|| s.equals("Ans")) {
+					if (s.equals("e") || s.equals("pi") || s.equals("Ans")) {
 						screenInput = insertString(screenInput, s, CursorPos);
 						CursorPos = CursorPos + s.length();
 					} else {
+						if (s.equals("FAC"))
+						{
+							screenInput = insertString(screenInput, s, CursorPos);
+							evaluateInput=screenInput.replaceAll("([+ - * /])?(\\d+)FAC", "$1FAC($2)");
+							screenInput=evaluateInput.replaceAll("([+ - * /])?(Ans)FAC", "$1FAC($2)");
+							evaluateInput = screenInput;
+							CursorPos = CursorPos +s.length()+2;
+						}
+						else {
 						screenInput = insertString(screenInput, s + "()", CursorPos);
 						CursorPos = CursorPos + s.length() + 1;
+						}
+						
+
 					}
 				}
 			}
@@ -189,7 +197,9 @@ public class ConvertDisplay {
 			// if (screenInput.charAt(CursorPos) == ')') {CursorPos++;}
 			CursorPos = CursorPos + 1;
 		}
-		evaluateInput = screenInput;
+		
+		evaluateInput = screenInput.replaceAll("null", "");
+		screenInput=evaluateInput;
 
 	}
 
@@ -198,17 +208,19 @@ public class ConvertDisplay {
 			if (DisplayMode == Mode.NORMAL) {
 				latexOutput = evaluateInput;
 				latexOutput = latexOutput.replaceAll("FAC\\(([0-9]*)(\\\\Box)?\\)", "$1!$2");
+				latexOutput = latexOutput.replaceAll("FAC\\(Ans\\)", "Ans!");
 				latexOutput = latexOutput.replace("/", "\\div");
 				latexOutput = latexOutput.replace("*", "\\times");
 				latexOutput = latexOutput.replaceAll("(times)([\\w])", "$1\\\\$2");
 				latexOutput = latexOutput.replaceAll("sqrt\\((.*)\\)", "\\\\sqrt{$1}");
 				latexOutput = latexOutput.replace("(", "{(");
-				//latexOutput = latexOutput.replaceAll("sqrt\\{([^)]*)\\)", "sqrt\\{$1\\}");
+				// latexOutput = latexOutput.replaceAll("sqrt\\{([^)]*)\\)",
+				// "sqrt\\{$1\\}");
 				latexOutput = latexOutput.replace("pi", "\\pi");
 				latexOutput = latexOutput.replace(")", ")}");
-				latexOutput = latexOutput.replace("cbrt","\\sqrt[3]");
+				latexOutput = latexOutput.replace("cbrt", "\\sqrt[3]");
 				latexOutput = latexOutput.replaceAll("\\\\([0-9])", "$1");
-				latexOutput = latexOutput.replaceAll("\\^(-?[0-9]*)","\\^\\{$1\\}");
+				latexOutput = latexOutput.replaceAll("\\^(-?[0-9]*)", "\\^\\{$1\\}");
 				latexOutput = latexOutput.replaceAll("\\{\\}", "");
 				latexOutput = latexOutput.replace("asin", "sin^{-1}");
 				latexOutput = latexOutput.replace("acos", "cos^{-1}");
@@ -216,6 +228,7 @@ public class ConvertDisplay {
 				latexOutput = latexOutput.replace("log", "ln");
 				latexOutput = latexOutput.replace("ln10", "log");
 				latexOutput = latexOutput.replace("\\\\", "\\");
+				latexOutput = latexOutput.replaceAll("null", "");
 				return;
 			}
 		}
@@ -250,38 +263,37 @@ public class ConvertDisplay {
 			latexOutput = latexOutput.replace(")", "");
 			latexOutput = latexOutput.replaceAll("\\^(-?[0-9]*)", "\\^\\{$1\\}");
 		}
-		if (DisplayMode == Mode.MATRIX){
-			//DecimalFormat df = new DecimalFormat("#.####");
-			//df.setRoundingMode(RoundingMode.CEILING);
-			String start="\\begin{bmatrix}",end="end{bmatrix}",Rowsep="\\\\",row="", out="";
-			int r=0,c=0;
-			latexOutput=start;
+		if (DisplayMode == Mode.MATRIX) {
+			// DecimalFormat df = new DecimalFormat("#.####");
+			// df.setRoundingMode(RoundingMode.CEILING);
+			String start = "\\begin{bmatrix}", end = "end{bmatrix}", Rowsep = "\\\\", row = "", out = "";
+			int r = 0, c = 0;
+			latexOutput = start;
 			Mrows = M.rows;
 			Mcols = M.columns;
-			for (r = 1; r <= Mrows; r++){
-				for (c = 1; c <=Mcols;c++){
+			for (r = 1; r <= Mrows; r++) {
+				for (c = 1; c <= Mcols; c++) {
 					BigDecimal bd = new BigDecimal(M.getValue(r, c)).setScale(2, RoundingMode.HALF_UP);
-					//System.out.println(bd.toString());
-					if (bd.toString().substring(bd.toString().length()-2).equals("00")) {
-						out=bd.toString().substring(0,bd.toString().length()-3);
+					// System.out.println(bd.toString());
+					if (bd.toString().substring(bd.toString().length() - 2).equals("00")) {
+						out = bd.toString().substring(0, bd.toString().length() - 3);
+					} else {
+						out = bd.toString();
 					}
-						else
-						{
-							out=bd.toString();
-						}
-					
-					row=row+out+"&";
+
+					row = row + out + "&";
 				}
-				row = row.substring(0, row.length()-1);
-				latexOutput = latexOutput+row + Rowsep;
-				row="";
+				row = row.substring(0, row.length() - 1);
+				latexOutput = latexOutput + row + Rowsep;
+				row = "";
 			}
-			latexOutput = latexOutput.substring(0, latexOutput.length()-1)+end;
+			latexOutput = latexOutput.substring(0, latexOutput.length() - 1) + end;
 			return;
 		}
 	}
 
 	public Expression giveExpression(String[] Buttons) {
+		Btns = Buttons;
 		CursorPos = 0;
 		screenInput = "";
 		evaluateInput = "";
@@ -290,125 +302,119 @@ public class ConvertDisplay {
 		for (i = 0; i < Buttons.length; i++) {
 			charRun(Buttons[i].trim());
 		}
-	
-		if (evaluateInput.contains("Ans")){
-			screenInput=evaluateInput;
-			evaluateInput = evaluateInput.replace("Ans",this.Ans.toPlainString());
+
+		if (evaluateInput.contains("Ans")) {
+			screenInput = evaluateInput;
+			evaluateInput = evaluateInput.replace("Ans", this.Ans.toPlainString());
 			CursorPos = evaluateInput.length();
 		}
 		evaluateInput = evaluateInput.replace(" ", "");
 		E.setExpression(evaluateInput);
-		if (evaluateInput.length() > CursorPos) {
-			evaluateInput = evaluateInput.substring(0, CursorPos) + "\\Box" + evaluateInput.substring(CursorPos);
-					
-		}
-		else
-		{
-			evaluateInput = evaluateInput+"\\Box";
-					
-		}
-		//giveLatex();
+		evaluateInput = screenInput;
+//		if (evaluateInput.length() > CursorPos) {
+//			evaluateInput = evaluateInput.substring(0, CursorPos) + "\\Box" + evaluateInput.substring(CursorPos);
+//
+//		} else {
+			evaluateInput = evaluateInput + "\\Box";
+
+//		}
+		
+		// giveLatex();
 		return E;
 	}
 
 	public Polynomial giveAlgebra(String[] btn) {
-		String s, exp, c, x="", csign="", expsign="",output="";
+		String s, exp, c, x = "", csign = "", expsign = "", output = "";
 		int i;
 		int exponent;
 		Double coefficient;
-		String	 ch;
+		String ch;
 		char dgt;
-		boolean expFlag=false, TermFoundFlag=false;
+		boolean expFlag = false, TermFoundFlag = false;
 		c = "";
 		x = "";
 		exp = "";
 		P = new Polynomial();
-		for (i = 0; i <=btn.length-1;i++) {
+		for (i = 0; i <= btn.length - 1; i++) {
 			ch = btn[i];
-			if (ch == "+" || ch == "-")
-			{
-				if (expFlag && exp !=""){
-					//makeTerm
+			if (ch == "+" || ch == "-") {
+				if (expFlag && exp != "") {
+					// makeTerm
 					TermFoundFlag = true;
-					output = output+csign+c+x+expsign+exp;
-					exponent = Integer.parseInt(expsign+exp);
-					
+					output = output + csign + c + x + expsign + exp;
+					exponent = Integer.parseInt(expsign + exp);
+
 					coefficient = Double.parseDouble(csign + c);
 					P.put(exponent, coefficient);
-					csign=ch;
-					c="";
-					expsign="";
-					exp="";
-					x="";
-					expFlag=false;
-					
-				}
-				else if (expFlag && exp=="")
-				{
-					expsign=ch;
-				}
-				else
-				{
+					csign = ch;
+					c = "";
+					expsign = "";
+					exp = "";
+					x = "";
+					expFlag = false;
+
+				} else if (expFlag && exp == "") {
+					expsign = ch;
+				} else {
 					csign = ch;
 				}
-			}
-			else
-			{
-				if (ch == "x^" || ch == "x")
-				{
-					if (c == "") { c = "1";}
-					if (ch == "x")
-					{
-						expFlag=true;
-						x="x";
-						exp="1";
-						
+			} else {
+				if (ch == "x^" || ch == "x") {
+					if (c == "") {
+						c = "1";
 					}
-					else
-					{
-						x="x^";
-						exp="";
-						expFlag=true;
+					if (ch == "x") {
+						expFlag = true;
+						x = "x";
+						exp = "1";
+
+					} else {
+						x = "x^";
+						exp = "";
+						expFlag = true;
 					}
-				}
-				else
-				{
+				} else {
 					dgt = ch.charAt(0);
-					if (Character.isDigit(dgt))
-					{
-						if (expFlag){
-							exp = exp+dgt;
-						}
-						else
-						{
-							c = c+dgt;
+					if (Character.isDigit(dgt)) {
+						if (expFlag) {
+							exp = exp + dgt;
+						} else {
+							c = c + dgt;
 						}
 					}
 				}
 			}
-			//output=csign+c+x+expsign+exp;
-			//exponent=Integer.parseInt(expsign+exp);
-			//coefficient = Double.valueOf(csign+c);
-			//P.put(exponent, coefficient);
+			// output=csign+c+x+expsign+exp;
+			// exponent=Integer.parseInt(expsign+exp);
+			// coefficient = Double.valueOf(csign+c);
+			// P.put(exponent, coefficient);
 		}
-		exponent =0;
-		coefficient=0.0;
-			if (c == "") { coefficient = 0.0;}
-			if (exp == "") { exponent = 0;}
-			if (c !="") {coefficient = Double.valueOf(csign+c);}
-			if (exp !="") { exponent = Integer.parseInt(expsign+exp);}
-				P.put(exponent, coefficient);
+		exponent = 0;
+		coefficient = 0.0;
+		if (c == "") {
+			coefficient = 0.0;
+		}
+		if (exp == "") {
+			exponent = 0;
+		}
+		if (c != "") {
+			coefficient = Double.valueOf(csign + c);
+		}
+		if (exp != "") {
+			exponent = Integer.parseInt(expsign + exp);
+		}
+		P.put(exponent, coefficient);
 		return P;
 	}
 
 	public RationalNum giveRational(String[] btn) {
 		int i;
-		String num = "", den = "",wn="";
-		BigInteger p,q,w;
-		boolean DenFlag = false, Minus =false;
+		String num = "", den = "", wn = "";
+		BigInteger p, q, w;
+		boolean DenFlag = false, Minus = false;
 		RationalNum r = new RationalNum();
 		char digit;
-		for (i = 0; i <= btn.length-1; i++) {
+		for (i = 0; i <= btn.length - 1; i++) {
 			if (btn[i].length() < 2) {
 				if (btn[i].equals("-")) {
 					Minus = !Minus;
@@ -434,120 +440,145 @@ public class ConvertDisplay {
 				}
 				if (btn[i].equals("whole")) {
 					r.wn = BigInteger.valueOf(Long.valueOf(num)).abs();
-					num="";
+					num = "";
 				}
 			}
 		}
-		if (r.wn.intValue() !=0) {
-			if (num=="") {
+		if (r.wn.intValue() != 0) {
+			if (num == "") {
 				r.p = BigInteger.ZERO;
 				p = BigInteger.ZERO;
-				r.q=BigInteger.ONE;
+				r.q = BigInteger.ONE;
 				q = BigInteger.ONE;
-			}
-			else
-			{
+			} else {
 				if (den == "") {
-					r.q=BigInteger.ONE;
-					q=BigInteger.ONE;
-					r.p=BigInteger.valueOf(Long.valueOf(num)).abs();
-					p=r.p;
-				}
-				else
-				{
-					r.p=BigInteger.valueOf(Long.valueOf(num)).abs();
-					r.q=BigInteger.valueOf(Long.valueOf(den)).abs();
-					r.p=r.q.multiply(r.wn).add(r.p);
-					r.q=r.q;
-					r.wn=BigInteger.ZERO;
+					r.q = BigInteger.ONE;
+					q = BigInteger.ONE;
+					r.p = BigInteger.valueOf(Long.valueOf(num)).abs();
+					p = r.p;
+				} else {
+					r.p = BigInteger.valueOf(Long.valueOf(num)).abs();
+					r.q = BigInteger.valueOf(Long.valueOf(den)).abs();
+					r.p = r.q.multiply(r.wn).add(r.p);
+					r.q = r.q;
+					r.wn = BigInteger.ZERO;
 				}
 			}
-			w=r.wn.abs();
-			//r.p=w.multiply(q).add(p);
-			if (Minus) {r.wn = r.wn.multiply(BigInteger.valueOf(Long.parseLong("-1")));}
-			//r.wn=BigInteger.ZERO;
-		}
-		else
-		{
-			if (num=="") {
+			w = r.wn.abs();
+			// r.p=w.multiply(q).add(p);
+			if (Minus) {
+				r.wn = r.wn.multiply(BigInteger.valueOf(Long.parseLong("-1")));
+			}
+			// r.wn=BigInteger.ZERO;
+		} else {
+			if (num == "") {
 				r.p = BigInteger.ZERO;
-				r.q=BigInteger.ONE;
-			}
-			else
-			{
+				r.q = BigInteger.ONE;
+			} else {
 				if (den == "") {
-					r.q=BigInteger.ONE;
-					r.p=BigInteger.valueOf(Long.valueOf(num)).abs();
-				}
-				else
-				{
-					r.p=BigInteger.valueOf(Long.valueOf(num)).abs();
-					r.q=BigInteger.valueOf(Long.valueOf(den)).abs();
+					r.q = BigInteger.ONE;
+					r.p = BigInteger.valueOf(Long.valueOf(num)).abs();
+				} else {
+					r.p = BigInteger.valueOf(Long.valueOf(num)).abs();
+					r.q = BigInteger.valueOf(Long.valueOf(den)).abs();
 				}
 			}
-			if (Minus) {r.p = r.p.multiply(BigInteger.valueOf(Long.parseLong("-1")));}
-			r.wn=BigInteger.ZERO;
+			if (Minus) {
+				r.p = r.p.multiply(BigInteger.valueOf(Long.parseLong("-1")));
+			}
+			r.wn = BigInteger.ZERO;
 		}
 		return r;
 	}
 
-	public RationalNum solveRational(RationalNum R1, String Op, RationalNum R2){
-	RationalNum R = new RationalNum();
-	switch (Op){
-	case "+":
-		R = R1.add(R2);
-		break;
-	case "-":
-		R = R1.subtract(R2);
-		break;
-	case "*":
-		R = R1.multiply(R2);
-		break;
-	case "/":
-		R = R1.divide(R2);
-		break;
+	public RationalNum solveRational(RationalNum R1, String Op, RationalNum R2) {
+		RationalNum R = new RationalNum();
+		switch (Op) {
+		case "+":
+			R = R1.add(R2);
+			break;
+		case "-":
+			R = R1.subtract(R2);
+			break;
+		case "*":
+			R = R1.multiply(R2);
+			break;
+		case "/":
+			R = R1.divide(R2);
+			break;
+		}
+		return R;
 	}
-	return R;
-}
 
 	public clsAngle Angle = new clsAngle(0);
-	
-	
-	public static class clsAngle
-	{
-	
-		clsAngle(double val){
+
+	public static class clsAngle {
+
+		clsAngle(double val) {
 			value = val;
 		}
-		
+
 		public double value;
 		public int degress;
 		public int minutes;
 		public double seconds;
-		public String giveDtoDSM(){
-			int d = (int)value;  // Truncate the decimals
+
+		public String giveDtoDSM() {
+			int d = (int) value; // Truncate the decimals
 			double t1 = (value - d) * 60;
-			int m = (int)t1;
-			double  s1 = (t1 - m) * 60;
-			
-			int s = (int)s1;
-			degress=d;
-			minutes=m;
-			seconds=s1;
-			return String.valueOf(d) + "\\jlatexmathring"+String.valueOf(m)+"\\textapos"+String.format(Locale.ROOT,"%.5g",  s1) +"\\thickspace\\textapos\\textapos";
+			int m = (int) t1;
+			double s1 = (t1 - m) * 60;
+
+			int s = (int) s1;
+			degress = d;
+			minutes = m;
+			seconds = s1;
+			return String.valueOf(d) + "\\jlatexmathring" + String.valueOf(m) + "\\textapos"
+					+ String.format(Locale.ROOT, "%.5g", s1) + "\\thickspace\\textapos\\textapos";
 		}
-		public double D2R(){
+
+		public double D2R() {
 			double ans;
-			ans=Math.toRadians(value);
+			ans = Math.toRadians(value);
 			value = ans;
 			return value;
 		}
-		public double R2D(){
+
+		public double R2D() {
 			double ans;
-			ans=Math.toDegrees(value);
-			ans = Double.parseDouble(String.format(Locale.ROOT, "%.7g",ans));
+			ans = Math.toDegrees(value);
+			ans = Double.parseDouble(String.format(Locale.ROOT, "%.7g", ans));
 			value = ans;
 			return value;
 		}
+	}
+
+	private int lastIntegerPosition(String[] Buttons) {
+		int pos = 0;
+		Character c = null;
+		boolean Found = false;
+		for (int j = FacStart; j < Buttons.length; j++) {
+			if (Buttons[j].equals("FAC")) {
+				FacStart = ++j;
+				if (Found) {
+					return j;
+				} else {
+					return 0;
+				}
+			}
+			if (!Buttons[j].equals("FAC")) {
+				c = Buttons[j].charAt(0);
+				if (c == '+' || c == '-' || c == '*' || c == '/' || Character.isAlphabetic(c)) {
+					Found = true;
+					pos = j;
+				}
+			}
+		}
+		if (Found) {
+			return pos + 1;
+		} else {
+			return pos;
+		}
+
 	}
 }
