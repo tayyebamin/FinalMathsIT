@@ -549,6 +549,7 @@ public class Expression {
 			public BigDecimal eval(List<BigDecimal> parameters) {
 				BigDecimal bd=BigDecimal.ZERO, angle = BigDecimal.ZERO;
 				double d=0.0;
+				if (EAngleMode == null) {EAngleMode = AngleMode.DEGREE;}
 				switch (EAngleMode){
 				case DEGREE:
 					angle = parameters.get(0).remainder(new BigDecimal(360,mc));

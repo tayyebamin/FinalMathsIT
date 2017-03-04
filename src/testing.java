@@ -25,8 +25,16 @@ public class testing {
 		//String[] btn1 = {"sin","cos","tan","4","5","NEXT","NEXT","NEXT","+","1"};
 		//String[] btn1 = {"sin","FAC","4","NEXT","+","1","*","FAC","3"};
 		//String[] btn1 = {"log","4","NEXT","+","9"};
-		String[] btn1 = {"2","*","2"};
-		String[] btn2 = {"Ans","FAC","*","2"};
+//		String exp="sin(8)";
+//		Expression ex = new Expression();
+//		ex.setExpression(exp);
+//		System.out.println(ex.eval().toPlainString());
+//		cD.setE(ex);
+//		cD.giveLatex();
+//		System.out.println(cD.latexOutput);
+////		
+		String[] btn1 = {"sin","cos","2","NEXT","NEXT"};
+		String[] btn2 = {"Ans","+","Ans","/", "Ans"};
 		E=cD.giveExpression(btn1);
 		E.EAngleMode = cD.cDAngleMode;
 		try {
@@ -59,7 +67,7 @@ public class testing {
 			System.out.println("Error");
 		}
 		
-		
+//		
 		//btn= giveArray("sin cos 45 NEXT + 12");
 //		String [] btn1 = {"log10", "2"};
 //		//btn=btn1;

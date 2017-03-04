@@ -23,7 +23,7 @@ public class ConvertDisplay {
 	static String Coefficient = "", Power = "";
 	Stack<String> stack = new Stack<String>();
 	public int Mrows = 0, Mcols = 0;
-	int FacStart = 0;
+	int AnsPos = 0,FacStart=0;
 	boolean FractionFound, TrignoFunction = false;
 	Polynomial P;
 	Matrix M;
@@ -31,7 +31,9 @@ public class ConvertDisplay {
 
 	public String[] Btns;
 	public AngleMode cDAngleMode;
-
+	public void setE(Expression ex){
+		E = ex;
+	}
 	public Matrix getM() {
 		return M;
 	}
@@ -210,8 +212,9 @@ public class ConvertDisplay {
 				latexOutput = latexOutput.replaceAll("FAC\\(([0-9]*)(\\\\Box)?\\)", "$1!$2");
 				latexOutput = latexOutput.replaceAll("FAC\\(Ans\\)", "Ans!");
 				latexOutput = latexOutput.replace("/", "\\div");
+				latexOutput = latexOutput.replaceAll("(.*)\\\\div([a-zA-Z])", "$1\\\\div $2");
 				latexOutput = latexOutput.replace("*", "\\times");
-				latexOutput = latexOutput.replaceAll("(times)([\\w])", "$1\\\\$2");
+				latexOutput = latexOutput.replaceAll("(.*)\\\\times([a-zA-Z])", "$1\\\\times $2");
 				latexOutput = latexOutput.replaceAll("sqrt\\((.*)\\)", "\\\\sqrt{$1}");
 				latexOutput = latexOutput.replace("(", "{(");
 				// latexOutput = latexOutput.replaceAll("sqrt\\{([^)]*)\\)",
@@ -306,16 +309,26 @@ public class ConvertDisplay {
 		if (evaluateInput.contains("Ans")) {
 			screenInput = evaluateInput;
 			evaluateInput = evaluateInput.replace("Ans", this.Ans.toPlainString());
-			CursorPos = evaluateInput.length();
+			//AnsPos = screenInput.indexOf("Ans",AnsPos+1);
+			//CursorPos = AnsPos+3;
 		}
 		evaluateInput = evaluateInput.replace(" ", "");
 		E.setExpression(evaluateInput);
 		evaluateInput = screenInput;
-//		if (evaluateInput.length() > CursorPos) {
-//			evaluateInput = evaluateInput.substring(0, CursorPos) + "\\Box" + evaluateInput.substring(CursorPos);
-//
-//		} else {
+		System.out.println("TESTING lenght: " + evaluateInput.length() + " Cursor Pos: " + CursorPos);
+		if (evaluateInput.length() > CursorPos) {
+			evaluateInput = evaluateInput.substring(0, CursorPos) + "\\Box" + evaluateInput.substring(CursorPos);
+
+		} else {
+//		if (evaluateInput.matches("(.*\\([\\d,Ans]*)([\\)]+$)")) {
+//			String abc;
+//			abc= evaluateInput.replaceAll("(.*\\([\\d,Ans]*)([\\)]+$)", "$1\\\\Box$2");
+//			evaluateInput=abc;
+//		}
+//		else
+//			{
 			evaluateInput = evaluateInput + "\\Box";
+			}
 
 //		}
 		
