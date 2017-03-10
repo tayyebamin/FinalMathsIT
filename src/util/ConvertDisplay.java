@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Stack;
 
@@ -213,9 +214,9 @@ public class ConvertDisplay {
 				latexOutput = latexOutput.replaceAll("FAC\\(Ans\\)", "Ans!");
 				latexOutput = latexOutput.replace("/", "\\div");
 				latexOutput = latexOutput.replaceAll("(.*)\\\\div([a-zA-Z])", "$1\\\\div $2");
-				latexOutput = latexOutput.replace("*", "\\times");
-				latexOutput = latexOutput.replaceAll("(.*)\\\\times([a-zA-Z])", "$1\\\\times $2");
-				latexOutput = latexOutput.replaceAll("sqrt\\((.*)\\)", "\\\\sqrt{$1}");
+				//latexOutput = latexOutput.replace("*", "\\times");
+				latexOutput = latexOutput.replaceAll("\\*", "\\\\times ");
+				latexOutput = latexOutput.replaceAll("sqrt", "\\\\sqrt");
 				latexOutput = latexOutput.replace("(", "{(");
 				// latexOutput = latexOutput.replaceAll("sqrt\\{([^)]*)\\)",
 				// "sqrt\\{$1\\}");
@@ -594,4 +595,16 @@ public class ConvertDisplay {
 		}
 
 	}
+	public String format(int scale) {
+		if (scale == 0) {
+			scale = Ans.toPlainString().length();
+		}
+		Locale.setDefault(new Locale("en","US"));
+		  NumberFormat formatter = new DecimalFormat("0.0E0");
+		  formatter.setRoundingMode(RoundingMode.HALF_UP);
+		  formatter.setMinimumFractionDigits(scale);
+		  String ret = formatter.format(Ans);
+		  ret=ret.replaceAll("(.*)E(.*)","$1\\\\times 10^{$2}");
+		  return ret;
+		}
 }

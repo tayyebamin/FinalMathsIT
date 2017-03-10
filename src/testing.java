@@ -1,5 +1,9 @@
 import java.io.LineNumberInputStream;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import algebra.*;
@@ -33,13 +37,19 @@ public class testing {
 //		cD.giveLatex();
 //		System.out.println(cD.latexOutput);
 ////		
-		String[] btn1 = {"sin","cos","2","NEXT","NEXT"};
-		String[] btn2 = {"Ans","+","Ans","/", "Ans"};
+		// create a BigDecimal object
+	     
+	      
+		String[] btn1 = {"sqrt","4","+","sqrt","2"};
+		String[] btn2 = {"sqrt","4","*","sin", "3","+","4","NEXT","/","sqrt","4"};
 		E=cD.giveExpression(btn1);
+		System.out.println("Awais: " + E.getExpression());
 		E.EAngleMode = cD.cDAngleMode;
 		try {
 			cD.Ans = E.eval();
-			System.out.println("Answer = " +cD.Ans.toPlainString());
+			System.out.println("Answer(Eng String) = " +cD.format(0));
+			System.out.println("Answer(Simple String) = " +cD.Ans.toString());
+			System.out.println("Answer(Plain String) = " +cD.Ans.toPlainString());
 			 
 		} catch (Exception e) {
 			System.out.println("Error");
@@ -62,7 +72,7 @@ public class testing {
 		System.out.println("Latex output: " + cD.latexOutput);
 		try {
 			cD.Ans = E.eval();
-			System.out.println("Answer= " + cD.Ans.toPlainString());
+			System.out.println("Answer= " + cD.format(0));
 		} catch (Exception e) {
 			System.out.println("Error");
 		}
@@ -274,6 +284,12 @@ public class testing {
 		}
 		return P;
 	}
+	private static String format(BigDecimal x, int scale) {
+		  NumberFormat formatter = new DecimalFormat("0.0E0");
+		  formatter.setRoundingMode(RoundingMode.HALF_UP);
+		  formatter.setMinimumFractionDigits(scale);
+		  return formatter.format(x);
+		}
 }
 
 
