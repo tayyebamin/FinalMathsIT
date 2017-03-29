@@ -205,7 +205,9 @@ public class ConvertDisplay {
 		screenInput=evaluateInput;
 
 	}
-
+	public String converttoEng(){
+		return Ans.toEngineeringString().replaceAll("E","\\\\times 10 ^").replaceAll("\\^(-?[0-9]*)", "\\^\\{$1\\}");
+	}
 	public void giveLatex() {
 		if (evaluateInput.length() > 0) {
 			if (DisplayMode == Mode.NORMAL) {
@@ -224,6 +226,7 @@ public class ConvertDisplay {
 				latexOutput = latexOutput.replace(")", ")}");
 				latexOutput = latexOutput.replace("cbrt", "\\sqrt[3]");
 				latexOutput = latexOutput.replaceAll("\\\\([0-9])", "$1");
+				latexOutput = latexOutput.replace("E", " \\times 10 ^");
 				latexOutput = latexOutput.replaceAll("\\^(-?[0-9]*)", "\\^\\{$1\\}");
 				latexOutput = latexOutput.replaceAll("\\{\\}", "");
 				latexOutput = latexOutput.replace("asin", "sin^{-1}");
@@ -232,6 +235,7 @@ public class ConvertDisplay {
 				latexOutput = latexOutput.replace("log", "ln");
 				latexOutput = latexOutput.replace("ln10", "log");
 				latexOutput = latexOutput.replace("\\\\", "\\");
+				
 				latexOutput = latexOutput.replaceAll("null", "");
 				return;
 			}
@@ -596,13 +600,15 @@ public class ConvertDisplay {
 
 	}
 	public String format(int scale) {
+		int i=0;
 		if (scale == 0) {
 			scale = Ans.toPlainString().length();
+			i = Ans.toPlainString().length();
 		}
 		Locale.setDefault(new Locale("en","US"));
-		  NumberFormat formatter = new DecimalFormat("0.0E0");
-		  formatter.setRoundingMode(RoundingMode.HALF_UP);
-		  formatter.setMinimumFractionDigits(scale);
+		  NumberFormat formatter = new DecimalFormat("#.#E0");
+		  //formatter.setRoundingMode(RoundingMode.HALF_UP);
+		  formatter.setMinimumFractionDigits(i);
 		  String ret = formatter.format(Ans);
 		  ret=ret.replaceAll("(.*)E(.*)","$1\\\\times 10^{$2}");
 		  return ret;

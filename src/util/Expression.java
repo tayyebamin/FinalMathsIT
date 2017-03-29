@@ -415,7 +415,7 @@ public class Expression {
 		addOperator(new Operator("/", 30, true) {
 			@Override
 			public BigDecimal eval(BigDecimal v1, BigDecimal v2) {
-				return v1.divide(v2, mc);
+				return v1.divide(v2,mc);
 			}
 		});
 		addOperator(new Operator("%", 30, true) {
@@ -565,7 +565,7 @@ public class Expression {
 					//System.out.println("P: " + parameters.get(0).toPlainString() + " angleRAD: " + angle.toPlainString() + "Pi: " + angle.doubleValue()/PI.doubleValue());
 					d = Math.sin(angle.doubleValue());
 					bd = new BigDecimal(d,mc);
-					bd = bd.setScale(10,RoundingMode.HALF_UP);
+					//bd = bd.setScale(10,RoundingMode.HALF_UP);
 					break;
 				case GRADIAN:
 					break;
@@ -1055,7 +1055,10 @@ public class Expression {
 				});
 			}
 		}
-		return stack.pop().eval().stripTrailingZeros();
+		BigDecimal bd = new BigDecimal(0,mc.DECIMAL128);
+		bd =stack.pop().eval().stripTrailingZeros();
+		
+		return bd;
 	}
 
 	/**
@@ -1409,9 +1412,9 @@ public class Expression {
 				while (bd.compareTo(result) == 1){
 					bd = bd.subtract(result);
 				}
-				System.out.println("Original Expression: " + matcher.group(1) + "Evaluation: " + bd.toPlainString());
+				//System.out.println("Original Expression: " + matcher.group(1) + "Evaluation: " + bd.toPlainString());
 				dummy = Pattern.compile("[cos sin tan]\\(([^\\)]*)\\)").matcher(dummy).replaceFirst(bd.toPlainString());
-				System.out.println(dummy);
+				//System.out.println(dummy);
 				
 				//this.setExpression(matcher.toString());
 				//System.out.println("New Expression: " + expression);
