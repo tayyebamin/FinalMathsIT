@@ -14,6 +14,7 @@ import util.ConvertDisplay.Mode;
 public class testing {
 	static Expression E = new Expression();
 	static ConvertDisplay cD = new ConvertDisplay();
+	
 	static String[] btn;
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -26,6 +27,14 @@ public class testing {
 		cD.DisplayMode=Mode.NORMAL;
 		
 		cD.cDAngleMode=AngleMode.DEGREE;
+		cD.Angle.degree=30;
+		cD.Angle.minutes=10;
+		cD.Angle.seconds=15;
+		cD.Angle.Evaluate();
+		System.out.println(cD.Angle.giveDtoDSM());
+			E.setExpression("sin(" + cD.Angle.value + ")");
+			cD.setE(E);
+		System.out.println(E.eval().toPlainString());
 		//String[] btn1 = {"sin","cos","tan","4","5","NEXT","NEXT","NEXT","+","1"};
 		//String[] btn1 = {"sin","FAC","4","NEXT","+","1","*","FAC","3"};
 		//String[] btn1 = {"log","4","NEXT","+","9"};
@@ -38,11 +47,45 @@ public class testing {
 //		System.out.println(cD.latexOutput);
 ////		
 		// create a BigDecimal object
-	     
+//	    System.out.println("----------------------------");
+//		BigDecimal bd = new BigDecimal(4.999999999);
+//		BigDecimal bd1 = new BigDecimal(0);
+//		bd1=bd.setScale(10,RoundingMode.HALF_UP);
+//		BigDecimal diff = new BigDecimal(0);
+//		diff = bd1.subtract(bd);
+//		int result=0;
+//		result = diff.compareTo(new BigDecimal(1E-10));
+//		System.out.println(bd.toPlainString());
+//		System.out.println(bd1.toPlainString());
+//		System.out.println(diff.toPlainString());
+//		
+//		if (result == 1) {
+//			System.out.println(bd.toPlainString() + " accuracy is less than 1E-10 " );
+//			System.out.println("Return value " + bd.toPlainString());
+//		}
+//		if (result == 0) {
+//			System.out.println("Return value " + bd);
+//		}
+//		if (result == -1) {
+//			System.out.println(bd.toPlainString() + " accuracy is less than 1E-10 " );
+//			System.out.println("Return value " + bd1.toPlainString());
+//		}
+//		
+//		System.out.println("----------------------------");
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	      
-		String[] btn1 = {"sqrt","4","+","sqrt","2"};
+		String[] btn1 = {"sin","2","5","D","3","0","M"};
 		String[] btn2 = {"sqrt","4","*","sin", "3","+","4","NEXT","/","sqrt","4"};
 		E=cD.giveExpression(btn1);
+		System.out.println("Testing last number" + cD.lastTrignoNumeric());
 		System.out.println("Awais: " + E.getExpression());
 		E.EAngleMode = cD.cDAngleMode;
 		try {
@@ -290,6 +333,7 @@ public class testing {
 		  formatter.setMinimumFractionDigits(scale);
 		  return formatter.format(x);
 		}
+	
 }
 
 

@@ -32,6 +32,7 @@ public class ConvertDisplay {
 
 	public String[] Btns;
 	public AngleMode cDAngleMode;
+	clsAngle Ang = new clsAngle();
 	public void setE(Expression ex){
 		E = ex;
 	}
@@ -184,7 +185,29 @@ public class ConvertDisplay {
 		} else // When input is only 1 Character
 		{
 			backCur = CursorPos;
-
+			//Code for Degree/Minutes/Seconds
+			
+			Double ret;
+			if (s.equals("D")) {
+				ret = lastTrignoNumeric();
+				Ang.degree =  ret.intValue();
+				Ang.Evaluate();
+			}
+			if (s.equals("M")) {
+				ret = lastTrignoNumeric();
+				Ang.minutes =  ret.intValue();
+				Ang.Evaluate();
+			}
+			if (s.equals("S")) {
+				ret = lastTrignoNumeric();
+				Ang.seconds =  ret;
+				Ang.Evaluate();
+			}
+			
+			if (Ang.value > 0) {
+				System.out.println("Value " + Ang.value );
+			}
+//			//////////////////////////////////////////
 			if (s.equals("-")) {
 				screenInput = insertString(screenInput, s, CursorPos);
 				screenInput = adjustMinus(screenInput);
@@ -194,6 +217,7 @@ public class ConvertDisplay {
 					screenInput = s;
 				} else {
 					screenInput = insertString(screenInput, s, CursorPos);
+					screenInput = screenInput.replaceAll("(-?[0-9]*\\.?[0-9]*[D M S])", String.valueOf(Ang.value));
 				}
 
 			}
@@ -535,24 +559,43 @@ public class ConvertDisplay {
 		clsAngle(double val) {
 			value = val;
 		}
-
+		clsAngle() {
+			value = 0d;
+		}
+		clsAngle(int d, int m, double s){
+			degree = d;
+			minutes = m;
+			seconds = s;
+			value = ((minutes * 60)+seconds) / (60*60);
+			value = degree + value;
+		}
+		public void Evaluate(){
+			value = ((minutes * 60)+seconds) / (60*60);
+			value = degree + value;
+		}
 		public double value;
-		public int degress;
+		public int degree;
 		public int minutes;
 		public double seconds;
 
 		public String giveDtoDSM() {
 			int d = (int) value; // Truncate the decimals
+			String ret;
 			double t1 = (value - d) * 60;
 			int m = (int) t1;
 			double s1 = (t1 - m) * 60;
-
+			ret = 	String.valueOf(d) + "\\jlatexmathring";
 			int s = (int) s1;
-			degress = d;
+			degree = d;
 			minutes = m;
 			seconds = s1;
-			return String.valueOf(d) + "\\jlatexmathring" + String.valueOf(m) + "\\textapos"
-					+ String.format(Locale.ROOT, "%.5g", s1) + "\\thickspace\\textapos\\textapos";
+			if (m != 0) {
+				ret = ret + String.valueOf(m) + "\\textapos";
+			}
+			if (s1 > 0.01d) {
+				ret = ret + String.format(Locale.ROOT, "%.5g", s1) + "\\thickspace\\textapos\\textapos";
+			}
+			return ret;
 		}
 
 		public double D2R() {
@@ -601,6 +644,7 @@ public class ConvertDisplay {
 	}
 	public String format(int scale) {
 		int i=0;
+		
 		if (scale == 0) {
 			scale = Ans.toPlainString().length();
 			i = Ans.toPlainString().length();
@@ -613,4 +657,26 @@ public class ConvertDisplay {
 		  ret=ret.replaceAll("(.*)E(.*)","$1\\\\times 10^{$2}");
 		  return ret;
 		}
+	public double lastTrignoNumeric(){
+		 Expression Ex = new Expression();
+		double ret= 0d;
+		String Ret="";
+		int size = Btns.length;
+		int startpos=CursorPos;
+		if (size > 0) {
+			while(! Character.isAlphabetic(screenInput.charAt(startpos)))
+			{
+				startpos--;
+			}
+			startpos=startpos+1;
+			for (int i = startpos;i<CursorPos;i++){
+				Ret = Ret + screenInput.charAt(i);
+			}
+			Ret = Ret.replace("(", "");
+			Ex.setExpression(Ret);
+			ret = Ex.eval().doubleValue();
+			
+		}
+		return ret;
+	}
 }
