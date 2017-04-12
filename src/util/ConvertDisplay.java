@@ -15,16 +15,16 @@ import numbers.*;
 
 //This class will use to convert an expression into Latex display format.
 public class ConvertDisplay {
-	public String screenInput = "", evaluateInput = "", latexOutput;
-	public int CursorPos = 0, backCur = 0;
-	static boolean Adjusted = false, bracketFun = false, endBracket = true, powerFlag = false;
+	public String screenInput = "", evaluateInput = "", latexOutput, displayInput="";
+	public int CursorPos = 0, backCur = 0,dispCursorPos=0;
+	static boolean Adjusted = false, bracketFun = false, endBracket = true, powerFlag = false, AngFound=false;
 	static Expression E = new Expression();
 	static String errorMsg = null;
 	static String Algebraout;
 	static String Coefficient = "", Power = "";
 	Stack<String> stack = new Stack<String>();
 	public int Mrows = 0, Mcols = 0;
-	int AnsPos = 0,FacStart=0;
+	int AnsPos = 0,FacStart=0, lenRet=0;
 	boolean FractionFound, TrignoFunction = false;
 	Polynomial P;
 	Matrix M;
@@ -132,6 +132,13 @@ public class ConvertDisplay {
 			FractionFound = false;
 			R = new RationalNum(p, Long.valueOf(s));
 		}
+		if ( s.equals("sin") || s.equals("cos") || s.equals("tan")) {
+			Ang.value=0;
+			Ang.degree=0;
+			Ang.minutes=0;
+			Ang.seconds=0;
+			AngFound=true;
+		}
 		if (s.equals("FRAC")) {
 			p = Long.valueOf(stack.pop().toString());
 			stack.push(String.valueOf(p));
@@ -141,7 +148,7 @@ public class ConvertDisplay {
 			stack.add(s);
 		}
 		if (Len != 1) {
-
+			AngFound=false;
 			if (s.equals("BACK")) {
 				stack.pop();
 				String[] Btn;
@@ -160,22 +167,37 @@ public class ConvertDisplay {
 					} else {
 						CursorPos = screenInput.length();
 					}
+					if (dispCursorPos < displayInput.length() - 1) {
+						if (displayInput.charAt(dispCursorPos) == ')' && displayInput.charAt(dispCursorPos + 1) == ')') {
+							dispCursorPos++;
+						} else {
+							dispCursorPos = displayInput.length();
+						}
+					} else {
+						dispCursorPos = displayInput.length();
+					}
 				} else {
 					if (s.equals("e") || s.equals("pi") || s.equals("Ans")) {
 						screenInput = insertString(screenInput, s, CursorPos);
+						displayInput = insertString(displayInput,s,dispCursorPos);
 						CursorPos = CursorPos + s.length();
+						dispCursorPos = dispCursorPos + s.length();
 					} else {
 						if (s.equals("FAC"))
 						{
 							screenInput = insertString(screenInput, s, CursorPos);
+							displayInput = insertString(displayInput, s, dispCursorPos);
 							evaluateInput=screenInput.replaceAll("([+ - * /])?(\\d+)FAC", "$1FAC($2)");
 							screenInput=evaluateInput.replaceAll("([+ - * /])?(Ans)FAC", "$1FAC($2)");
 							evaluateInput = screenInput;
 							CursorPos = CursorPos +s.length()+2;
+							dispCursorPos = dispCursorPos + s.length()+2;
 						}
 						else {
 						screenInput = insertString(screenInput, s + "()", CursorPos);
+						displayInput = insertString(displayInput, s+"()", dispCursorPos);
 						CursorPos = CursorPos + s.length() + 1;
+						dispCursorPos = dispCursorPos + s.length()+1;
 						}
 						
 
@@ -189,25 +211,39 @@ public class ConvertDisplay {
 			
 			Double ret;
 			if (s.equals("D")) {
+				screenInput = insertString(screenInput, s, CursorPos);
 				ret = lastTrignoNumeric();
-				Ang.degree =  ret.intValue();
+				Ang.degree =  ret;
 				Ang.Evaluate();
+				displayInput = insertString(displayInput, s, dispCursorPos);
+				screenInput = screenInput.replaceAll("(-?[0-9]*\\.?[0-9]*[D M S])", String.valueOf(Ang.value));
+				CursorPos = giveLastCursor();
+				AngFound = true;
 			}
 			if (s.equals("M")) {
+				screenInput = insertString(screenInput, s, CursorPos);
 				ret = lastTrignoNumeric();
 				Ang.minutes =  ret.intValue();
 				Ang.Evaluate();
+				displayInput = insertString(displayInput, s, dispCursorPos);
+				screenInput = screenInput.replaceAll("(-?[0-9]*\\.?[0-9]*[D M S])", String.valueOf(Ang.value));
+				CursorPos = giveLastCursor();
+				AngFound = true;
 			}
 			if (s.equals("S")) {
+				screenInput = insertString(screenInput, s, CursorPos);
 				ret = lastTrignoNumeric();
 				Ang.seconds =  ret;
 				Ang.Evaluate();
+				displayInput = insertString(displayInput, s, dispCursorPos);
+				screenInput = screenInput.replaceAll("(-?[0-9]*\\.?[0-9]*[D M S])", String.valueOf(Ang.value));
+				CursorPos = giveLastCursor();
+				AngFound = true;
 			}
 			
-			if (Ang.value > 0) {
-				System.out.println("Value " + Ang.value );
+			if (Ang.value > 0 && (s.equals("S") || s.equals("M")|| s.equals("D"))) {
+				
 			}
-//			//////////////////////////////////////////
 			if (s.equals("-")) {
 				screenInput = insertString(screenInput, s, CursorPos);
 				screenInput = adjustMinus(screenInput);
@@ -215,27 +251,49 @@ public class ConvertDisplay {
 
 				if (screenInput.length() == 0) {
 					screenInput = s;
-				} else {
+					displayInput = s;
+				} else { if (! AngFound) {
 					screenInput = insertString(screenInput, s, CursorPos);
-					screenInput = screenInput.replaceAll("(-?[0-9]*\\.?[0-9]*[D M S])", String.valueOf(Ang.value));
+					displayInput = insertString(displayInput, s, dispCursorPos);
+					//displayInput = screenInput;
+					
+				}
 				}
 
 			}
+//			//////////////////////////////////////////
+		
 			// if (screenInput.charAt(CursorPos) == ')') {CursorPos++;}
 			CursorPos = CursorPos + 1;
+					dispCursorPos = dispCursorPos +1;
+			AngFound=false;
 		}
 		
 		evaluateInput = screenInput.replaceAll("null", "");
 		screenInput=evaluateInput;
 
 	}
+	private int giveLastCursor() {
+		int ret=0;
+		ret = screenInput.length();
+		while ((screenInput.charAt(ret-1)==')')){
+			ret--;
+		}
+		return ret-1;
+	}
 	public String converttoEng(){
 		return Ans.toEngineeringString().replaceAll("E","\\\\times 10 ^").replaceAll("\\^(-?[0-9]*)", "\\^\\{$1\\}");
 	}
 	public void giveLatex() {
+		//System.out.println(" SCREEN INPUT : " + screenInput );
+		//System.out.println(" DISPLAY INPUT : " + displayInput );
+		//System.out.println(" EVALUATE INPUT : " + evaluateInput );
 		if (evaluateInput.length() > 0) {
 			if (DisplayMode == Mode.NORMAL) {
-				latexOutput = evaluateInput;
+				latexOutput = displayInput;
+				latexOutput = latexOutput.replaceAll("(-?[0-9]*\\.?[0-9]*)D", "$1\\\\jlatexmathring");
+				latexOutput = latexOutput.replaceAll("(-?[0-9]*\\.?[0-9]*)M", "$1\\\\textapos");
+				latexOutput = latexOutput.replaceAll("(-?[0-9]*\\.?[0-9]*)S", "$1\\\\textapos\\\\textapos");
 				latexOutput = latexOutput.replaceAll("FAC\\(([0-9]*)(\\\\Box)?\\)", "$1!$2");
 				latexOutput = latexOutput.replaceAll("FAC\\(Ans\\)", "Ans!");
 				latexOutput = latexOutput.replace("/", "\\div");
@@ -306,7 +364,7 @@ public class ConvertDisplay {
 			for (r = 1; r <= Mrows; r++) {
 				for (c = 1; c <= Mcols; c++) {
 					BigDecimal bd = new BigDecimal(M.getValue(r, c)).setScale(2, RoundingMode.HALF_UP);
-					// System.out.println(bd.toString());
+					// //System.out.println(bd.toString());
 					if (bd.toString().substring(bd.toString().length() - 2).equals("00")) {
 						out = bd.toString().substring(0, bd.toString().length() - 3);
 					} else {
@@ -329,6 +387,8 @@ public class ConvertDisplay {
 		CursorPos = 0;
 		screenInput = "";
 		evaluateInput = "";
+		displayInput="";
+		dispCursorPos = 0;
 		Expression E = new Expression();
 		int i;
 		for (i = 0; i < Buttons.length; i++) {
@@ -343,10 +403,10 @@ public class ConvertDisplay {
 		}
 		evaluateInput = evaluateInput.replace(" ", "");
 		E.setExpression(evaluateInput);
-		evaluateInput = screenInput;
-		System.out.println("TESTING lenght: " + evaluateInput.length() + " Cursor Pos: " + CursorPos);
-		if (evaluateInput.length() > CursorPos) {
-			evaluateInput = evaluateInput.substring(0, CursorPos) + "\\Box" + evaluateInput.substring(CursorPos);
+		evaluateInput = displayInput;
+		//System.out.println("TESTING lenght: " + evaluateInput.length() + " Cursor Pos: " + CursorPos);
+		if (evaluateInput.length() > dispCursorPos) {
+			evaluateInput = evaluateInput.substring(0, dispCursorPos) + "\\Box" + evaluateInput.substring(dispCursorPos);
 
 		} else {
 //		if (evaluateInput.matches("(.*\\([\\d,Ans]*)([\\)]+$)")) {
@@ -574,8 +634,8 @@ public class ConvertDisplay {
 			value = degree + value;
 		}
 		public double value;
-		public int degree;
-		public int minutes;
+		public double degree;
+		public double minutes;
 		public double seconds;
 
 		public String giveDtoDSM() {
@@ -662,17 +722,20 @@ public class ConvertDisplay {
 		double ret= 0d;
 		String Ret="";
 		int size = Btns.length;
-		int startpos=CursorPos;
+		int startpos=dispCursorPos;
 		if (size > 0) {
-			while(! Character.isAlphabetic(screenInput.charAt(startpos)))
+			while(! Character.isAlphabetic(displayInput.charAt(startpos)))
 			{
 				startpos--;
 			}
 			startpos=startpos+1;
-			for (int i = startpos;i<CursorPos;i++){
-				Ret = Ret + screenInput.charAt(i);
+			for (int i = startpos;i<dispCursorPos;i++){
+				Ret = Ret + displayInput.charAt(i);
 			}
 			Ret = Ret.replace("(", "");
+			Ret = Ret.replace(")", "");
+			lenRet=Ret.length();
+			CursorPos = CursorPos - lenRet;
 			Ex.setExpression(Ret);
 			ret = Ex.eval().doubleValue();
 			

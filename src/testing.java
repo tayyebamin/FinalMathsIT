@@ -79,13 +79,12 @@ public class testing {
 		
 		
 		
-		
+		//,"NEXT","+","cos","3","0","D"
 		
 	      
-		String[] btn1 = {"sin","2","5","D","3","0","M"};
+		String[] btn1 = {"sin","2","5","D","3","0","M","NEXT","+","cos","3","0","D","NEXT","+","sqrt","4","*","sin", "3","+","4","NEXT","/","sqrt","4"};
 		String[] btn2 = {"sqrt","4","*","sin", "3","+","4","NEXT","/","sqrt","4"};
 		E=cD.giveExpression(btn1);
-		System.out.println("Testing last number" + cD.lastTrignoNumeric());
 		System.out.println("Awais: " + E.getExpression());
 		E.EAngleMode = cD.cDAngleMode;
 		try {
