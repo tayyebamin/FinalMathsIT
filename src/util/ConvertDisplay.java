@@ -112,6 +112,39 @@ public class ConvertDisplay {
 		}
 		return Output;
 	}
+	private String adjustMinusdisplay(String Input) {
+		Input = Input.trim();
+		int i, pos = 0;
+		boolean operatorFound;
+		String Output = Input;
+		operatorFound = false;
+		char c;
+		for (i = 0; i <= Input.length() - 1; i++) {
+			c = Input.charAt(i);
+			if (operatorFound && c == '-') {
+				operatorFound = false;
+				Adjusted = true;
+				dispCursorPos = i + 2;
+				Output = Input.substring(0, pos + 1) + "(" + "- )" + Input.substring(pos + 2);
+
+			}
+			if (i > 1) {
+				if (Character.isDigit(c) && Input.charAt(i - 1) == ')') {
+					// Enter number within ()
+					dispCursorPos--;
+					Output = insertString(Input.substring(0, dispCursorPos - 1), String.valueOf(c), dispCursorPos - 1) + ")";
+				}
+			}
+
+			if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+				operatorFound = true;
+				pos = i;
+			} else {
+				operatorFound = false;
+			}
+		}
+		return Output;
+	}
 
 	private String insertString(String Main, String Rem, int CurPos) {
 		String Output;
@@ -189,6 +222,8 @@ public class ConvertDisplay {
 							displayInput = insertString(displayInput, s, dispCursorPos);
 							evaluateInput=screenInput.replaceAll("([+ - * /])?(\\d+)FAC", "$1FAC($2)");
 							screenInput=evaluateInput.replaceAll("([+ - * /])?(Ans)FAC", "$1FAC($2)");
+							displayInput=displayInput.replaceAll("([+ - * /])?(\\d+)FAC", "$1FAC($2)");
+							displayInput=displayInput.replaceAll("([+ - * /])?(Ans)FAC", "$1FAC($2)");
 							evaluateInput = screenInput;
 							CursorPos = CursorPos +s.length()+2;
 							dispCursorPos = dispCursorPos + s.length()+2;
@@ -241,12 +276,11 @@ public class ConvertDisplay {
 				AngFound = true;
 			}
 			
-			if (Ang.value > 0 && (s.equals("S") || s.equals("M")|| s.equals("D"))) {
-				
-			}
 			if (s.equals("-")) {
 				screenInput = insertString(screenInput, s, CursorPos);
 				screenInput = adjustMinus(screenInput);
+				displayInput=insertString(displayInput, s, dispCursorPos);
+				displayInput=adjustMinusdisplay(displayInput);
 			} else {
 
 				if (screenInput.length() == 0) {
@@ -285,9 +319,9 @@ public class ConvertDisplay {
 		return Ans.toEngineeringString().replaceAll("E","\\\\times 10 ^").replaceAll("\\^(-?[0-9]*)", "\\^\\{$1\\}");
 	}
 	public void giveLatex() {
-		//System.out.println(" SCREEN INPUT : " + screenInput );
-		//System.out.println(" DISPLAY INPUT : " + displayInput );
-		//System.out.println(" EVALUATE INPUT : " + evaluateInput );
+//		System.out.println(" SCREEN INPUT : " + screenInput );
+//		System.out.println(" DISPLAY INPUT : " + displayInput );
+//		System.out.println(" EVALUATE INPUT : " + evaluateInput );
 		if (evaluateInput.length() > 0) {
 			if (DisplayMode == Mode.NORMAL) {
 				latexOutput = displayInput;
@@ -403,6 +437,7 @@ public class ConvertDisplay {
 		}
 		evaluateInput = evaluateInput.replace(" ", "");
 		E.setExpression(evaluateInput);
+		displayInput = displayInput.replace(" ", "");
 		evaluateInput = displayInput;
 		//System.out.println("TESTING lenght: " + evaluateInput.length() + " Cursor Pos: " + CursorPos);
 		if (evaluateInput.length() > dispCursorPos) {
@@ -417,11 +452,13 @@ public class ConvertDisplay {
 //		else
 //			{
 			evaluateInput = evaluateInput + "\\Box";
+			displayInput = displayInput+"\\Box";;
 			}
 
 //		}
 		
 		// giveLatex();
+		displayInput = evaluateInput;
 		return E;
 	}
 

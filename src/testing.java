@@ -82,8 +82,8 @@ public class testing {
 		//,"NEXT","+","cos","3","0","D"
 		
 	      
-		String[] btn1 = {"sin","2","5","D","3","0","M","NEXT","+","cos","3","0","D","NEXT","+","sqrt","4","*","sin", "3","+","4","NEXT","/","sqrt","4"};
-		String[] btn2 = {"sqrt","4","*","sin", "3","+","4","NEXT","/","sqrt","4"};
+		String[] btn2 = {"sin","2","5","D","1","2","0","M","NEXT","+","3","FAC"};
+		String[] btn1 = {"3","FAC"};
 		E=cD.giveExpression(btn1);
 		System.out.println("Awais: " + E.getExpression());
 		E.EAngleMode = cD.cDAngleMode;
