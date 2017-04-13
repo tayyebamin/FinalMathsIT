@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import algebra.*;
 import numbers.*;
@@ -14,7 +15,8 @@ import util.ConvertDisplay.Mode;
 public class testing {
 	static Expression E = new Expression();
 	static ConvertDisplay cD = new ConvertDisplay();
-	
+	static BigDecimal bd;
+	static BigDecimal min;
 	static String[] btn;
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -35,6 +37,10 @@ public class testing {
 			E.setExpression("sin(" + cD.Angle.value + ")");
 			cD.setE(E);
 		System.out.println(E.eval().toPlainString());
+		min=new BigDecimal(1E-10);
+		bd=new BigDecimal(0.66660000000000000000000000000000000000000000000000000000000001);
+		System.out.println("Tayyeb" + bd.compareTo(min));
+		
 		//String[] btn1 = {"sin","cos","tan","4","5","NEXT","NEXT","NEXT","+","1"};
 		//String[] btn1 = {"sin","FAC","4","NEXT","+","1","*","FAC","3"};
 		//String[] btn1 = {"log","4","NEXT","+","9"};
@@ -82,16 +88,16 @@ public class testing {
 		//,"NEXT","+","cos","3","0","D"
 		
 	      
-		String[] btn2 = {"sin","2","5","D","1","2","0","M","NEXT","+","3","FAC"};
-		String[] btn1 = {"3","FAC"};
+		String[] btn2 = {"6","*","sqrt","2","5","NEXT","-","e","^","5","+","pi","*","5","^","3","+","2","^","2","-","6","^","-","1","NEXT","*","log10","2"};
+		String[] btn1 = {"2","^","-","1","NEXT","*","log10","2"};
 		E=cD.giveExpression(btn1);
 		System.out.println("Awais: " + E.getExpression());
 		E.EAngleMode = cD.cDAngleMode;
 		try {
 			cD.Ans = E.eval();
-			System.out.println("Answer(Eng String) = " +cD.format(0));
-			System.out.println("Answer(Simple String) = " +cD.Ans.toString());
-			System.out.println("Answer(Plain String) = " +cD.Ans.toPlainString());
+			
+			System.out.println("Answer(Simple String) [C H E C K ] = " +cD.GiveAns());
+			//System.out.println("Answer(Plain String) = " +cD.Ans.toPlainString());
 			 
 		} catch (Exception e) {
 			System.out.println("Error");
@@ -112,12 +118,7 @@ public class testing {
 		System.out.println("Expression: " + E.toString());
 		cD.giveLatex();
 		System.out.println("Latex output: " + cD.latexOutput);
-		try {
-			cD.Ans = E.eval();
-			System.out.println("Answer= " + cD.format(0));
-		} catch (Exception e) {
-			System.out.println("Error");
-		}
+		
 		
 //		
 		//btn= giveArray("sin cos 45 NEXT + 12");
@@ -326,12 +327,7 @@ public class testing {
 		}
 		return P;
 	}
-	private static String format(BigDecimal x, int scale) {
-		  NumberFormat formatter = new DecimalFormat("0.0E0");
-		  formatter.setRoundingMode(RoundingMode.HALF_UP);
-		  formatter.setMinimumFractionDigits(scale);
-		  return formatter.format(x);
-		}
+	
 	
 }
 

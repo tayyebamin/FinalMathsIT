@@ -22,6 +22,7 @@ public class ConvertDisplay {
 	static String errorMsg = null;
 	static String Algebraout;
 	static String Coefficient = "", Power = "";
+	static boolean Formatme=false;
 	Stack<String> stack = new Stack<String>();
 	public int Mrows = 0, Mcols = 0;
 	int AnsPos = 0,FacStart=0, lenRet=0;
@@ -299,11 +300,12 @@ public class ConvertDisplay {
 		
 			// if (screenInput.charAt(CursorPos) == ')') {CursorPos++;}
 			CursorPos = CursorPos + 1;
-					dispCursorPos = dispCursorPos +1;
+			dispCursorPos = dispCursorPos +1;
 			AngFound=false;
 		}
 		
 		evaluateInput = screenInput.replaceAll("null", "");
+		displayInput = displayInput.replaceAll("null","");
 		screenInput=evaluateInput;
 
 	}
@@ -423,6 +425,7 @@ public class ConvertDisplay {
 		evaluateInput = "";
 		displayInput="";
 		dispCursorPos = 0;
+		int displayLen=0;
 		Expression E = new Expression();
 		int i;
 		for (i = 0; i < Buttons.length; i++) {
@@ -437,11 +440,8 @@ public class ConvertDisplay {
 		}
 		evaluateInput = evaluateInput.replace(" ", "");
 		E.setExpression(evaluateInput);
-		displayInput = displayInput.replace(" ", "");
-		evaluateInput = displayInput;
-		//System.out.println("TESTING lenght: " + evaluateInput.length() + " Cursor Pos: " + CursorPos);
-		if (evaluateInput.length() > dispCursorPos) {
-			evaluateInput = evaluateInput.substring(0, dispCursorPos) + "\\Box" + evaluateInput.substring(dispCursorPos);
+		if ( displayInput.length() > dispCursorPos) {
+			displayInput = displayInput.substring(0, dispCursorPos) + "\\Box" + displayInput.substring(dispCursorPos);
 
 		} else {
 //		if (evaluateInput.matches("(.*\\([\\d,Ans]*)([\\)]+$)")) {
@@ -451,10 +451,14 @@ public class ConvertDisplay {
 //		}
 //		else
 //			{
-			evaluateInput = evaluateInput + "\\Box";
-			displayInput = displayInput+"\\Box";;
+			displayInput = displayInput+"\\Box";
 			}
 
+		displayLen= evaluateInput.length();
+		displayInput = displayInput.replace(" ", "");
+		evaluateInput = displayInput;
+		//System.out.println("TESTING lenght: " + evaluateInput.length() + " Cursor Pos: " + CursorPos);
+		
 //		}
 		
 		// giveLatex();
@@ -739,21 +743,21 @@ public class ConvertDisplay {
 		}
 
 	}
-	public String format(int scale) {
-		int i=0;
-		
-		if (scale == 0) {
-			scale = Ans.toPlainString().length();
-			i = Ans.toPlainString().length();
-		}
-		Locale.setDefault(new Locale("en","US"));
-		  NumberFormat formatter = new DecimalFormat("#.#E0");
-		  //formatter.setRoundingMode(RoundingMode.HALF_UP);
-		  formatter.setMinimumFractionDigits(i);
-		  String ret = formatter.format(Ans);
-		  ret=ret.replaceAll("(.*)E(.*)","$1\\\\times 10^{$2}");
-		  return ret;
-		}
+//	public String format(int scale) {
+//		int i=0;
+//		
+//		if (scale == 0) {
+//			scale = Ans.toPlainString().length();
+//			i = Ans.toPlainString().length();
+//		}
+//		Locale.setDefault(new Locale("en","US"));
+//		  NumberFormat formatter = new DecimalFormat("#.#E0");
+//		  //formatter.setRoundingMode(RoundingMode.HALF_UP);
+//		  formatter.setMinimumFractionDigits(i);
+//		  String ret = formatter.format(Ans);
+//		  ret=ret.replaceAll("(.*)E(.*)","$1\\\\times 10^{$2}");
+//		  return ret;
+//		}
 	public double lastTrignoNumeric(){
 		 Expression Ex = new Expression();
 		double ret= 0d;
@@ -777,6 +781,60 @@ public class ConvertDisplay {
 			ret = Ex.eval().doubleValue();
 			
 		}
+		return ret;
+	}
+	private String format(int scale) {
+		String ret="";
+		DecimalFormat formatter = new DecimalFormat("0.0E0");
+		if (Formatme) {
+		  formatter = (DecimalFormat) DecimalFormat.getInstance(new Locale("en","US"));
+		  formatter.setRoundingMode(RoundingMode.HALF_UP);
+		  Locale.setDefault(new Locale("en","US"));
+		  formatter.setMinimumFractionDigits(scale);
+		  Formatme=false;
+		 return Ans.toString();
+		  
+		}
+		ret = Ans.toPlainString();
+		return ret;
+		}
+	public BigDecimal scaledValue(int Scale) {
+		BigDecimal temp = new BigDecimal(0);
+      temp = Ans.setScale(Scale, RoundingMode.HALF_UP);
+      BigDecimal diff = new BigDecimal(0);
+      diff = Ans.subtract(temp).abs();
+      if (temp.stripTrailingZeros().compareTo(new BigDecimal(0)) == 0)
+      {
+    	  if (Ans.compareTo(new BigDecimal(1E-15)) == -1 ) {
+    		  Formatme=true;
+    	  }
+    	 
+      	return Ans;
+      }
+      int result = 0;
+      result = diff.compareTo(new BigDecimal(1E-15));
+//      System.out.println("Input: " + Ans.toPlainString());
+//      System.out.println("Temp: " + temp.toPlainString());
+//      System.out.println(" Diff: " + diff.toPlainString() + " Result: " + result);
+      if (result >= 0) {
+    	  Formatme=true;
+          return Ans;
+      }
+      if (Ans.compareTo(new BigDecimal(1E15)) == 1 ) {
+		  Formatme=true;
+		  return Ans;
+	  }
+      if (result == -1) {
+      	//Difference is ignorable with 1 x 10^-15
+          return temp.stripTrailingZeros();
+      }
+      return null;
+  }
+	public String GiveAns(){
+		String ret="";
+		int s=15;
+		Ans=scaledValue(15);
+		ret=format(s);
 		return ret;
 	}
 }
