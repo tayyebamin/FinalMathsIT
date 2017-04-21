@@ -89,7 +89,7 @@ public class testing {
 		
 	      
 		String[] btn2 = {"6","*","sqrt","2","5","NEXT","-","e","^","5","+","pi","*","5","^","3","+","2","^","2","-","6","^","-","1","NEXT","*","log10","2"};
-		String[] btn1 = {"2","^","-","1","NEXT","*","log10","2"};
+		String[] btn1 = {"2","+","3"};
 		E=cD.giveExpression(btn1);
 		System.out.println("Awais: " + E.getExpression());
 		E.EAngleMode = cD.cDAngleMode;

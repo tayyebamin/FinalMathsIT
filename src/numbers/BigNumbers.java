@@ -2197,8 +2197,13 @@ public class BigNumbers {
    }
 
    /** For test purposes...*/
-   /*
+   
    public static void main (String[] args) {
+	   BigDecimal bd = BigDecimal.valueOf(23);
+	   System.out.println(decToBin(bd,5));
+	   String s1 = "10111.1010";
+	   System.out.println(binToBigDecimal(s1));
+	   System.exit(0);
       //BigDecimal l2  = BigDecimal.valueOf(0.69314718055994530941723212145818);
       //BigDecimal l10 = BigDecimal.valueOf(2.3025850929940456840179914546844);
       //BigDecimal b = l10.divide(l2, MATH_CONTEXT);
@@ -2500,5 +2505,5 @@ public class BigNumbers {
       //System.out.println(", -5 mod -3=" + mod(new BigInteger("-5"), new BigInteger("-3")));
       //System.out.println("5 mod 0=" + mod(new BigInteger("5"), new BigInteger("0")));
    }
-   // */
+   
 }
