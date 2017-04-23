@@ -330,7 +330,7 @@ public class ConvertDisplay {
 				latexOutput = latexOutput.replaceAll("(-?[0-9]*\\.?[0-9]*)D", "$1\\\\jlatexmathring");
 				latexOutput = latexOutput.replaceAll("(-?[0-9]*\\.?[0-9]*)M", "$1\\\\textapos");
 				latexOutput = latexOutput.replaceAll("(-?[0-9]*\\.?[0-9]*)S", "$1\\\\textapos\\\\textapos");
-				latexOutput = latexOutput.replaceAll("FAC\\(([0-9]*)(\\\\Box)?\\)", "$1!$2");
+				latexOutput = latexOutput.replaceAll("FAC\\(([0-9]*)(\\\\_)?\\)", "$1!$2");
 				latexOutput = latexOutput.replaceAll("FAC\\(Ans\\)", "Ans!");
 				latexOutput = latexOutput.replace("/", "\\div");
 				latexOutput = latexOutput.replaceAll("(.*)\\\\div([a-zA-Z])", "$1\\\\div $2");
@@ -441,17 +441,17 @@ public class ConvertDisplay {
 		evaluateInput = evaluateInput.replace(" ", "");
 		E.setExpression(evaluateInput);
 		if ( displayInput.length() > dispCursorPos) {
-			displayInput = displayInput.substring(0, dispCursorPos) + "\\Box" + displayInput.substring(dispCursorPos);
+			displayInput = displayInput.substring(0, dispCursorPos) + "\\_" + displayInput.substring(dispCursorPos);
 
 		} else {
 //		if (evaluateInput.matches("(.*\\([\\d,Ans]*)([\\)]+$)")) {
 //			String abc;
-//			abc= evaluateInput.replaceAll("(.*\\([\\d,Ans]*)([\\)]+$)", "$1\\\\Box$2");
+//			abc= evaluateInput.replaceAll("(.*\\([\\d,Ans]*)([\\)]+$)", "$1\\\\_$2");
 //			evaluateInput=abc;
 //		}
 //		else
 //			{
-			displayInput = displayInput+"\\Box";
+			displayInput = displayInput+"\\_";
 			}
 
 		displayLen= evaluateInput.length();

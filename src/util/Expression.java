@@ -354,7 +354,7 @@ public class Expression {
 
 		// Tayyeb
 		private boolean validhexa(Character ch) {
-			if (ch == 'A' || ch == 'B' || ch == 'C' || ch == 'D' || ch == 'E' || ch == 'F') {
+			if (ch == 'A' || ch == 'B' || ch == 'C' || ch == 'D' || ch == 'E' || ch == 'F' || Character.isDigit(ch)) {
 				return true;
 			}
 			return false;
@@ -369,12 +369,10 @@ public class Expression {
 			while (Character.isWhitespace(ch) && pos < input.length()) {
 				ch = input.charAt(++pos);
 			}
-			if (Character.isDigit(ch) || validhexa(ch)) {
-				while ((Character.isDigit(ch) || validhexa(ch) || ch == decimalSeparator || ch == 'e' || ch == 'E'
+			if (validhexa(ch)) {
+				while (validhexa(ch) || ch == decimalSeparator 
 						|| (ch == minusSign && token.length() > 0
-								&& ('e' == token.charAt(token.length() - 1) || 'E' == token.charAt(token.length() - 1)))
-						|| (ch == '+' && token.length() > 0 && ('e' == token.charAt(token.length() - 1)
-								|| 'E' == token.charAt(token.length() - 1))))
+						|| (ch == '+' && token.length() > 0 ))
 						&& (pos < input.length())) {
 					token.append(input.charAt(pos++));
 					ch = pos == input.length() ? 0 : input.charAt(pos);
@@ -408,6 +406,7 @@ public class Expression {
 							"Unknown operator '" + token + "' at position " + (pos - token.length() + 1));
 				}
 			}
+			
 			return previousToken = token.toString();
 		}
 
@@ -1069,7 +1068,7 @@ public class Expression {
 	// Tayyeb
 	private boolean isvalidHexa(String str) {
 		boolean ret = false;
-		ret = str.matches("-?[0-9]*[A,B,C,D,E,F]*[0-9]*\\.?[0-9]*[A,B,C,D,E,F]*[0-9]*");
+		ret = str.matches("[0-9]*[A,B,C,D,E,F]*[0-9]*\\.?[0-9]*[A,B,C,D,E,F]*[0-9]*");
 		return ret;
 	}
 
@@ -1085,14 +1084,7 @@ public class Expression {
 			String token = tokenizer.next16();
 			if (isvalidHexa(token)) {
 				outputQueue.add(token);
-			} else if (variables.containsKey(token)) {
-				outputQueue.add(token);
-			} else if (functions.containsKey(token.toUpperCase(Locale.ROOT))) {
-				stack.push(token);
-				lastFunction = token;
-			} else if (Character.isLetter(token.charAt(0))) {
-				stack.push(token);
-			} else if (",".equals(token)) {
+			}  else if (",".equals(token)) {
 				if (operators.containsKey(previousToken)) {
 					throw new ExpressionException("Missing parameter(s) for operator " + previousToken
 							+ " at character position " + (tokenizer.getPos() - 1 - previousToken.length()));
@@ -1119,7 +1111,7 @@ public class Expression {
 				stack.push(token);
 			} else if ("(".equals(token)) {
 				if (previousToken != null) {
-					if (isNumber(previousToken)) {
+					if (isvalidHexa(previousToken)) {
 						throw new ExpressionException("Missing operator at character position " + tokenizer.getPos());
 					}
 					// if the ( is preceded by a valid function, then it
@@ -1797,10 +1789,8 @@ public class Expression {
 				final String v2 = stack.pop();
 				final BigDecimal V1 = hexToBigDecimal(v1, mc);
 				final BigDecimal V2 = hexToBigDecimal(v2, mc);
-				stack.push(eval_hexa(token, V1, V2));
-			} else if (variables.containsKey(token)) {
-				stack.push(token);
-			} else {
+				stack.push(eval_hexa(token, V2, V1));
+			}  else {
 				stack.push(token);
 			}
 			finalOp = token;
@@ -1814,7 +1804,7 @@ public class Expression {
 			if (matcher.find()) {
 				final BigDecimal fV1 = hexToBigDecimal(matcher.group(1), mc);
 				final BigDecimal fV2 = hexToBigDecimal(matcher.group(2), mc);
-				return eval_hexa(finalOp, fV1, fV2);
+				return eval_hexa(finalOp, fV2, fV1);
 			} else {
 				return val;
 			}
@@ -2004,7 +1994,7 @@ public class Expression {
 	private List<String> getRPN16() {
 		// if (rpn == null) {
 		rpn = shuntingYard16(this.expression);
-		validate(rpn);
+		//validate16(rpn);
 		// }
 		return rpn;
 	}
@@ -2066,6 +2056,42 @@ public class Expression {
 		}
 	}
 
+	private void validate16(List<String> rpn) {
+		/*-
+		* Thanks to Norman Ramsey:
+		* http://http://stackoverflow.com/questions/789847/postfix-notation-validation
+		*/
+		// each push on to this stack is a new function scope, with the value of
+		// each
+		// layer on the stack being the count of the number of parameters in
+		// that scope
+		Stack<Integer> stack = new Stack<Integer>();
+
+		// push the 'global' scope
+		stack.push(0);
+
+		for (final String token : rpn) {
+			if (operators.containsKey(token)) {
+				if (stack.peek() < 2) {
+					throw new ExpressionException("Missing parameter(s) for operator " + token);
+				}
+				// pop the operator's 2 parameters and add the result
+				stack.set(stack.size() - 1, stack.peek() - 2 + 1);
+			} else if ("(".equals(token)) {
+				stack.push(0);
+			} else {
+				stack.set(stack.size() - 1, stack.peek() + 1);
+			}
+		}
+
+		if (stack.size() > 1) {
+			throw new ExpressionException("Too many unhandled function parameter lists");
+		} else if (stack.peek() > 1) {
+			throw new ExpressionException("Too many numbers or variables");
+		} else if (stack.peek() < 1) {
+			throw new ExpressionException("Empty expression");
+		}
+	}
 	/**
 	 * Get a string representation of the RPN (Reverse Polish Notation) for this
 	 * expression.
@@ -2260,15 +2286,17 @@ public class Expression {
 		return stack.pop().eval().stripTrailingZeros();
 	}
 
-	/*
-	 * public static void main(String[] args) { Expression e= new Expression();
-	 * e.setExpression("-101 + 11");
-	 * System.out.println(e.eval2().toPlainString()); e.setExpression("20+3");
-	 * System.out.println(e.eval().toPlainString());
-	 * e.setExpression("-1F + 2D"); System.out.println(e.eval16());
-	 * e.setExpression("65 + 45");
-	 * System.out.println(e.eval8().toPlainString());
-	 * 
-	 * }
-	 */
+	
+	 public static void main(String[] args) { Expression e= new Expression();
+	  e.setExpression("-101 + 11");
+	  System.out.println(e.eval2().toPlainString()); 
+	  e.setExpression("20+3");
+	  System.out.println(e.eval().toPlainString());
+	  e.setExpression("6B - 3E"); 
+	  System.out.println(e.eval16());
+	  e.setExpression("65 + 45");
+	  System.out.println(e.eval8().toPlainString());
+	  
+	 }
+	 
 }
