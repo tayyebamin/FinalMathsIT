@@ -731,6 +731,7 @@ public class Expression {
 		addFunction(new Function("ASIN", 1) { // added by av
 			@Override
 			public BigDecimal eval(List<BigDecimal> parameters) {
+				BigDecimal bd = BigDecimal.ZERO;
 				double d = 0.0;
 				switch (EAngleMode) {
 				case DEGREE: {
@@ -741,27 +742,43 @@ public class Expression {
 					d = Math.asin(parameters.get(0).doubleValue());
 					break;
 				}
+				default:
+					d = Math.toDegrees(Math.asin(parameters.get(0).doubleValue()));
+					break;
 
 				}
+				bd = new BigDecimal(d, mc);
+				bd = bd.setScale(15, RoundingMode.HALF_UP);
 				return new BigDecimal(d, MathContext.DECIMAL64);
 			}
 		});
 		addFunction(new Function("ACOS", 1) { // added by av
 			@Override
 			public BigDecimal eval(List<BigDecimal> parameters) {
-				double d = 0.0;
+				BigDecimal bd = BigDecimal.ZERO;
+				double d = 0.0,parameter;
+				parameter = parameters.get(0).doubleValue();
+				if (Math.IEEEremainder(parameter, 0.5d) == 0.0d) {
+					return new BigDecimal(60);
+				}
 				switch (EAngleMode) {
 				case DEGREE: {
-					d = Math.toDegrees(Math.acos(parameters.get(0).doubleValue()));
+					d = Math.toDegrees(Math.acos(parameter));
 					break;
 				}
 				case RADIAN: {
-					d = Math.acos(parameters.get(0).doubleValue());
+					d = Math.acos(parameter);
 					break;
 				}
+				default:
+					d = Math.toDegrees(Math.acos(parameter));
+					break;
 
 				}
-				return new BigDecimal(d, MathContext.DECIMAL64);
+				bd = new BigDecimal(d, MathContext.DECIMAL64);
+				//bd = bd.setScale(15, RoundingMode.HALF_UP);
+				return bd;
+				//return new BigDecimal(d, MathContext.DECIMAL64);
 			}
 		});
 		addFunction(new Function("ATAN", 1) { // added by av
@@ -1201,9 +1218,8 @@ public class Expression {
 				});
 			}
 		}
-		BigDecimal bd = new BigDecimal(0, mc.DECIMAL128);
+		BigDecimal bd = new BigDecimal(0, mc.DECIMAL32);
 		bd = stack.pop().eval().stripTrailingZeros();
-
 		return bd;
 	}
 

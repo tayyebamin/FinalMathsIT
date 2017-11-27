@@ -33,13 +33,13 @@ public class testing {
 		cD.Angle.minutes=10;
 		cD.Angle.seconds=15;
 		cD.Angle.Evaluate();
-		System.out.println(cD.Angle.giveDtoDSM());
+		//System.out.println(cD.Angle.giveDtoDSM());
 			E.setExpression("sin(" + cD.Angle.value + ")");
 			cD.setE(E);
-		System.out.println(E.eval().toPlainString());
+		//System.out.println(E.eval().toPlainString());
 		min=new BigDecimal(1E-10);
 		bd=new BigDecimal(0.66660000000000000000000000000000000000000000000000000000000001);
-		System.out.println("Tayyeb" + bd.compareTo(min));
+		//System.out.println("Tayyeb" + bd.compareTo(min));
 		
 		//String[] btn1 = {"sin","cos","tan","4","5","NEXT","NEXT","NEXT","+","1"};
 		//String[] btn1 = {"sin","FAC","4","NEXT","+","1","*","FAC","3"};
@@ -89,9 +89,8 @@ public class testing {
 		
 	      
 		String[] btn2 = {"6","*","sqrt","2","5","NEXT","-","e","^","5","+","pi","*","5","^","3","+","2","^","2","-","6","^","-","1","NEXT","*","log10","2"};
-		String[] btn1 = {"2","+","3"};
+		String[] btn1 = {"acos","0",".","5"};
 		E=cD.giveExpression(btn1);
-		System.out.println("Awais: " + E.getExpression());
 		E.EAngleMode = cD.cDAngleMode;
 		try {
 			cD.Ans = E.eval();

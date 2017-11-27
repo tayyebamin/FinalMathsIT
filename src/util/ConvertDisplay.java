@@ -785,18 +785,23 @@ public class ConvertDisplay {
 	}
 	private String format(int scale) {
 		String ret="";
-		DecimalFormat formatter = new DecimalFormat("0.0E0");
-		if (Formatme) {
-		  formatter = (DecimalFormat) DecimalFormat.getInstance(new Locale("en","US"));
-		  formatter.setRoundingMode(RoundingMode.HALF_UP);
-		  Locale.setDefault(new Locale("en","US"));
-		  formatter.setMinimumFractionDigits(scale);
-		  Formatme=false;
-		 return Ans.toString();
-		  
-		}
-		ret = Ans.toPlainString();
-		return ret;
+		DecimalFormat dFor = new DecimalFormat("0.#");
+		   
+		   boolean flag = false;
+		   if (Ans.compareTo(new BigDecimal("1E15"))==1 || Ans.compareTo(new BigDecimal("1E-10")) == -1) {
+			   dFor =  (DecimalFormat) DecimalFormat.getInstance(new Locale("en","US"));
+			   dFor.applyPattern("0.#############E0");
+			   flag = true;
+		   }
+		   if (flag) {
+			   ret = dFor.format(Ans.doubleValue());
+		   }
+		   else
+		   {
+			   ret = Ans.toPlainString();
+		   }
+	
+			return ret;
 		}
 	public BigDecimal scaledValue(int Scale) {
 		BigDecimal temp = new BigDecimal(0);
@@ -833,7 +838,6 @@ public class ConvertDisplay {
 	public String GiveAns(){
 		String ret="";
 		int s=15;
-		Ans=scaledValue(15);
 		ret=format(s);
 		return ret;
 	}
