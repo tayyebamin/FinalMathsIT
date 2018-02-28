@@ -1317,7 +1317,7 @@ public class Matrix {
 	   Matrix m;
        double res;
        double[][] A;
-       A=this.matrix;
+       A=M.matrix;
        // Trivial 1x1 matrix
        if (N == 1)
            res = A[0][0];
@@ -1469,10 +1469,11 @@ public class Matrix {
   
 //   public static void main(String[] args) {
 //	   Matrix B = new Matrix(new double[][] {
-//		   {1,3,4},
-//		   {2,3,3},
-//		   {2,5,2}
+//		   {1,2,3},
+//		   {5,4,6},
+//		   {7,8,9}
 //	   });
+//	   System.out.println(B.determinant(B, B.rows));
 //         Matrix A = new Matrix(new double[][] {
 ////         1  2  3  4  5  6  7  8  9 10 11 12  13 14 15 16 17 18 19
 ////         { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -1539,6 +1540,6 @@ public class Matrix {
 ////         System.out.println("QR\n"+Q.Multiply(R).toString());
 ////         System.out.println("Adj: \n" + B.adjugate().toString());
 //         //System.out.println(B.toString());
-//   }
+ //}
    
 }
