@@ -419,11 +419,7 @@ public class Polynomial extends TreeMap<Integer, Double> {
 					// r.put( jj, new Double( ((Double) r.get(jj)).doubleValue()
 					// - tmp ) );
 					// }
-					if (r.get(j) == null) {
-						r.put(j, -tmp);
-					} else {
-						r.put(j, r.get(j) - tmp);
-					}
+						r.put(j, -tmp);	
 					// }
 				}
 			}
